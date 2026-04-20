@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sponsorship Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C8A96E;
+  --gold-dim: #9B7D4A;
+  --gold-glow: rgba(200,169,110,0.15);
+  --bg: #080810;
+  --bg2: #0e0e1a;
+  --bg3: #14141f;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border-gold: rgba(200,169,110,0.25);
+  --text: #f0eee8;
+  --text2: #8a8890;
+  --text3: #5a5860;
+  --blue: #4facfe;
+  --purple: #a78bfa;
+  --green: #34d399;
+  --pink: #f472b6;
+  --orange: #fb923c;
+  --cyan: #22d3ee;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated bg */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,172,254,0.05) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  background: rgba(8,8,16,0.85);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.nav-right { display:flex; align-items:center; gap:12px; }
+.nav-badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  background: var(--gold-glow);
+  font-family: 'Space Mono', monospace;
+}
+
+/* HERO */
+.hero {
+  padding: 4rem 2rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #f0eee8 0%, var(--gold) 50%, #f0eee8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 500px;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 2.5rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border-gold); }
+.stat-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity:0;
+  transition: opacity 0.2s;
+}
+.stat-card:hover::before { opacity:1; }
+.stat-label { font-size:11px; color:var(--text3); font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+.stat-value { font-size:28px; font-weight:700; color:var(--text); line-height:1; }
+.stat-sub { font-size:11px; color:var(--gold); margin-top:4px; }
+
+/* TOOLBAR */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 14px;
+  pointer-events: none;
+}
+#search {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px 10px 36px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'Sora', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#search:focus { border-color: var(--border-gold); }
+#search::placeholder { color: var(--text3); }
+.view-btns { display:flex; gap:4px; }
+.view-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: var(--text2);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Sora', sans-serif;
+}
+.view-btn:hover, .view-btn.active {
+  background: var(--gold-glow);
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+.sort-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text2);
+  font-size: 12px;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.sort-select:hover { border-color: var(--border-gold); color: var(--text); }
+
+/* SECTOR FILTERS */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+.filter-btn {
+  font-size: 11px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Sora', sans-serif;
+  white-space: nowrap;
+}
+.filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+.filter-btn.active {
+  font-weight: 500;
+}
+
+/* RESULTS INFO */
+.results-info {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 1rem;
+  font-family: 'Space Mono', monospace;
+}
+.results-info span { color: var(--gold); }
+
+/* GRID */
+#contacts-container { position: relative; z-index:1; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+
+/* CONTACT CARD */
+.contact-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.contact-card::before {
+  content:'';
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+  border-radius:3px 0 0 3px;
+  opacity:0.8;
+}
+.contact-card:hover {
+  background: var(--bg3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.card-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+.card-name { font-size:14px; font-weight:600; color:var(--text); line-height:1.3; }
+.card-company { font-size:11px; color:var(--text2); margin-top:2px; }
+.card-title { font-size:11px; color:var(--text2); line-height:1.5; margin-bottom:12px; height:34px; overflow:hidden; }
+.card-footer { display:flex; justify-content:space-between; align-items:center; }
+.sector-badge {
+  font-size:10px;
+  font-weight:500;
+  padding:3px 9px;
+  border-radius:20px;
+  font-family:'Space Mono',monospace;
+  letter-spacing:0.03em;
+}
+.card-city { font-size:11px; color:var(--text3); }
+.card-email-indicator {
+  width:6px; height:6px; border-radius:50%;
+  position:absolute; top:14px; right:14px;
+}
+
+/* LIST VIEW */
+.list { display:flex; flex-direction:column; gap:6px; }
+.list-row {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 140px 100px 60px;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.15s;
+}
+.list-row:hover { background:var(--bg3); border-color:rgba(255,255,255,0.12); }
+.list-name { font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list-company { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list-title { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list-city { font-size:11px; color:var(--text3); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+}
+.modal-overlay.open { opacity:1; visibility:visible; }
+.modal {
+  background: var(--bg2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.2s;
+}
+.modal-overlay.open .modal { transform:scale(1) translateY(0); }
+.modal-top { height:4px; border-radius:20px 20px 0 0; }
+.modal-body { padding:1.75rem; }
+.modal-close {
+  position:absolute; top:1rem; right:1rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; width:32px; height:32px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--text2); font-size:16px;
+  transition:all 0.15s; z-index:1;
+}
+.modal-close:hover { background:var(--surface-hover); color:var(--text); }
+.modal-avatar-wrap { display:flex; align-items:center; gap:16px; margin-bottom:1.5rem; }
+.modal-avatar {
+  width:60px; height:60px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; font-weight:700; flex-shrink:0;
+}
+.modal-name { font-size:18px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.modal-title { font-size:13px; color:var(--text2); line-height:1.5; }
+.modal-fields { border-top:1px solid var(--border); padding-top:1.25rem; }
+.modal-field { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); gap:12px; }
+.modal-field-label { font-size:12px; color:var(--text3); flex-shrink:0; font-family:'Space Mono',monospace; }
+.modal-field-value { font-size:12px; color:var(--text); text-align:right; word-break:break-all; }
+.modal-actions { display:flex; gap:8px; margin-top:1.25rem; }
+.modal-btn {
+  flex:1; padding:10px; font-size:12px; font-weight:500;
+  border-radius:10px; cursor:pointer; transition:all 0.15s;
+  font-family:'Sora',sans-serif; border:1px solid var(--border);
+  background:var(--surface); color:var(--text);
+}
+.modal-btn:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.2); }
+.modal-btn.primary { border-color:var(--border-gold); background:var(--gold-glow); color:var(--gold); }
+.modal-btn.primary:hover { background:rgba(200,169,110,0.25); }
+
+/* SECTOR BREAKDOWN */
+.breakdown-section { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); }
+.section-title {
+  font-family:'Space Mono',monospace; font-size:11px;
+  text-transform:uppercase; letter-spacing:0.2em;
+  color:var(--gold); margin-bottom:1.25rem;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.breakdown-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+.breakdown-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  transition:all 0.15s;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.breakdown-card:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.12); }
+.breakdown-name { font-size:12px; font-weight:500; color:var(--text); }
+.breakdown-count { font-size:20px; font-weight:700; }
+
+/* BUSINESS SECTION */
+.biz-section { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); }
+.biz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+.biz-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1.5rem;
+  transition:all 0.2s;
+}
+.biz-card:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.15); }
+.biz-icon { font-size:24px; margin-bottom:12px; }
+.biz-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.biz-desc { font-size:12px; color:var(--text2); line-height:1.7; }
+.biz-revenue { font-size:11px; font-family:'Space Mono',monospace; color:var(--gold); margin-top:8px; padding:4px 10px; border:1px solid var(--border-gold); border-radius:20px; display:inline-block; }
+
+/* FOOTER */
+footer {
+  margin-top:4rem;
+  padding:2rem;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-size:12px;
+  color:var(--text3);
+  font-family:'Space Mono',monospace;
+}
+footer span { color:var(--gold); }
+
+/* EMPTY */
+.empty {
+  text-align:center; padding:4rem 2rem;
+  color:var(--text3);
+}
+.empty h3 { font-size:16px; color:var(--text2); margin-bottom:8px; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.2); }
+
+/* RESPONSIVE */
+@media(max-width:600px) {
+  .list-row { grid-template-columns:36px 1fr 120px; }
+  .list-title, .list-city, .list-row .sector-badge:not(:nth-child(5)) { display:none; }
+  .hero h1 { font-size:1.8rem; }
+  nav { padding:0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="nav-logo-dot"></span>
+    Sponsorship HQ
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge" id="nav-count">143 contacts</span>
+    <span class="nav-badge" style="cursor:pointer" onclick="exportCSV()">Export CSV</span>
+  </div>
+</nav>
+
+<div class="hero" style="max-width:1400px;margin:0 auto">
+
+  <div class="hero-eyebrow">Sponsorship Command Center</div>
+  <h1>Your Network.<br>Your Power.</h1>
+  <p class="hero-sub">143 decision-makers across entertainment, sports, media, and finance. One command center to rule them all.</p>
+
+  <!-- STATS -->
+  <div class="stats-row" id="stats-row"></div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search" type="text" placeholder="Search name, company, title, sector..." oninput="applyFilters()">
+    </div>
+    <div class="view-btns">
+      <button class="view-btn active" onclick="setView('grid',this)">Grid</button>
+      <button class="view-btn" onclick="setView('list',this)">List</button>
+    </div>
+    <select class="sort-select" onchange="applyFilters()">
+      <option value="name">Sort: Name</option>
+      <option value="company">Sort: Company</option>
+      <option value="sector">Sort: Sector</option>
+    </select>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters" id="filters"></div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info" id="results-info"></div>
+
+  <!-- CONTACTS -->
+  <div id="contacts-container"></div>
+
+  <!-- SECTOR BREAKDOWN -->
+  <div class="breakdown-section">
+    <div class="section-title">Sector Breakdown</div>
+    <div class="breakdown-grid" id="breakdown-grid"></div>
+  </div>
+
+  <!-- BUSINESS OPPORTUNITIES -->
+  <div class="biz-section">
+    <div class="section-title">Scale Your Business</div>
+    <div class="biz-grid">
+      <div class="biz-card">
+        <div class="biz-icon">🎵</div>
+        <div class="biz-title">Artist Sponsorship Consulting</div>
+        <div class="biz-desc">Bridge artists and managers to your VP-level brand contacts. A single Heineken or Coca-Cola activation deal closes at $50K–$500K. You earn 10–15% as the connector.</div>
+        <div class="biz-revenue">$50K – $500K per deal</div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-icon">🎪</div>
+        <div class="biz-title">Event Activation Brokering</div>
+        <div class="biz-desc">AmEx, Mastercard, and Wells Fargo spend millions activating at concerts and festivals. Position yourself as the entertainment connector who gets their brand into BET Awards, Essence Fest, SXSW.</div>
+        <div class="biz-revenue">$25K – $150K per placement</div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-icon">📋</div>
+        <div class="biz-title">Monthly Retainer Consulting</div>
+        <div class="biz-desc">Indie labels, emerging artists, and entertainment companies need someone who knows brand-side relationships. Offer monthly retainer services managing their outreach and partnership pipeline.</div>
+        <div class="biz-revenue">$2K – $5K/month per client</div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-icon">🎯</div>
+        <div class="biz-title">Multicultural Marketing</div>
+        <div class="biz-desc">Colgate, L'Oreal, Avon, and Kraft Foods all have dedicated multicultural marketing teams in your list. Black entertainment and music is their top activation channel.</div>
+        <div class="biz-revenue">High demand, premium rates</div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-icon">🏀</div>
+        <div class="biz-title">Sports x Music Crossover</div>
+        <div class="biz-desc">Howard White at Nike's Jordan Brand and the NBA's Mark Tatum both live at the intersection of sports and culture. Pitch integrated deals that touch both worlds simultaneously.</div>
+        <div class="biz-revenue">Largest deal sizes in category</div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-icon">🌐</div>
+        <div class="biz-title">Build a Boutique Agency</div>
+        <div class="biz-desc">Package your network as a full-service boutique agency. 5 retainer clients at $3K/month = $180K ARR before any deal commissions. This list is the unfair advantage no one else has.</div>
+        <div class="biz-revenue">$180K+ ARR at scale</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<footer>
+  Sponsorship Command Center &mdash; <span id="year"></span>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const SECTOR_CONFIG = {
+  "Media & Entertainment": { color:"#e94560", bg:"rgba(233,69,96,0.12)" },
+  "Sports & Fashion":      { color:"#4facfe", bg:"rgba(79,172,254,0.12)" },
+  "Food & Bev":            { color:"#7ed321", bg:"rgba(126,211,33,0.12)" },
+  "Finance":               { color:"#f5a623", bg:"rgba(245,166,35,0.12)" },
+  "Spirits":               { color:"#c084fc", bg:"rgba(192,132,252,0.12)" },
+  "Retail":                { color:"#22d3ee", bg:"rgba(34,211,238,0.12)" },
+  "Beauty":                { color:"#f472b6", bg:"rgba(244,114,182,0.12)" },
+  "Tech & Telecom":        { color:"#34d399", bg:"rgba(52,211,153,0.12)" },
+  "Auto":                  { color:"#fb923c", bg:"rgba(251,146,60,0.12)" },
+  "Travel":                { color:"#818cf8", bg:"rgba(129,140,248,0.12)" },
+};
+
+const ALL_CONTACTS = [
+  {id:1,name:"Brad Ross",title:"VP, Global Sports Entertainment & Partnerships",company:"The Coca-Cola Company",email:"",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
+  {id:2,name:"Scott McCune",title:"VP, Global Partnerships & Experiential Marketing",company:"The Coca-Cola Company",email:"smccune@na.ko.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
+  {id:3,name:"John Egan",title:"Group Director, Sports Marketing",company:"The Coca-Cola Company",email:"jegan@na.ko.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
+  {id:4,name:"Wendy Clark",title:"SVP, Integrated Marketing Communications",company:"The Coca-Cola Company",email:"wclark@cokecce.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
+  {id:5,name:"Jeff Dubiel",title:"VP, Sports Marketing",company:"PepsiCo",email:"jeff.dubiel@pepsi.com",phone:"914-253-2000",sector:"Food & Bev",city:"Purchase NY"},
+  {id:6,name:"Jennifer Storms",title:"SVP, Sports Marketing – Gatorade",company:"PepsiCo",email:"",phone:"312-821-1000",sector:"Food & Bev",city:"Chicago"},
+  {id:7,name:"Javier Farfan",title:"VP of Marketing",company:"PepsiCo",email:"javier.farfan@pepsico.com",phone:"914-253-2000",sector:"Food & Bev",city:"Purchase NY"},
+  {id:8,name:"Peter Sterling",title:"VP, Marketing – U.S.",company:"McDonald's",email:"peter.sterling@us.mcd.com",phone:"630-623-3000",sector:"Food & Bev",city:"Oak Brook"},
+  {id:9,name:"John Lewicki",title:"Senior Director, Alliance & Event Marketing",company:"McDonald's",email:"john.lewicki@us.mcd.com",phone:"630-623-3000",sector:"Food & Bev",city:"Oak Brook"},
+  {id:10,name:"Pattie Falch",title:"Manager, Events & Sponsorships",company:"Heineken USA",email:"pfalch@heinekenusa.com",phone:"212-808-9498",sector:"Spirits",city:"New York"},
+  {id:11,name:"Jeffrey Moran",title:"VP, Public Relations, Events & Sponsorship",company:"Pernod Ricard USA",email:"jeffrey.moran@pernodricard-usa.com",phone:"914-848-4800",sector:"Spirits",city:"Purchase NY"},
+  {id:12,name:"Dave Karraker",title:"Brand Manager",company:"Skyy Spirits / Campari",email:"Dave.Karraker@campari.com",phone:"415-315-8082",sector:"Spirits",city:"San Francisco"},
+  {id:13,name:"Jim Tietjens",title:"Senior Director, Trade Marketing",company:"Anheuser-Busch InBev",email:"jim.tietjens@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
+  {id:14,name:"Mark Wright",title:"VP, Media & Sports Entertainment Marketing",company:"Anheuser-Busch InBev",email:"mark.wright@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
+  {id:15,name:"Brad Brown",title:"Senior Director, Sports Marketing",company:"Anheuser-Busch InBev",email:"brad.brown@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
+  {id:16,name:"Tony Fair",title:"Brand Manager",company:"Belvedere / Moet Hennessey",email:"tony.fair@mhusa.com",phone:"",sector:"Spirits",city:"New York"},
+  {id:17,name:"Pam",title:"Marketing / PR",company:"Patron Spirits",email:"pam@patronspirits.com",phone:"",sector:"Spirits",city:"Las Vegas"},
+  {id:18,name:"Ann Miller",title:"EVP, Global Sports Marketing",company:"Nike",email:"ann.miller@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
+  {id:19,name:"Howard White",title:"VP, Jordan Brand",company:"Nike",email:"howard.white@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
+  {id:20,name:"John Slusher",title:"VP, Global Sports Marketing",company:"Nike",email:"john.slusher@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
+  {id:21,name:"Aaron Barrett",title:"Sports Marketing Coordinator",company:"Adidas America",email:"aaron.barrett@adidas.com",phone:"971-234-2300",sector:"Sports & Fashion",city:"Portland"},
+  {id:22,name:"Jeff McAllister",title:"MLS Coordinator, Soccer Sports Marketing",company:"Adidas America",email:"jeff.mcallister@adidas.com",phone:"971-234-2300",sector:"Sports & Fashion",city:"Portland"},
+  {id:23,name:"Matthew Mirchin",title:"SVP, Sports Marketing",company:"Under Armour",email:"mmirchin@underarmour.com",phone:"410-454-6428",sector:"Sports & Fashion",city:"Baltimore"},
+  {id:24,name:"Walker Jones",title:"Director, NCAA & Sports Marketing",company:"Under Armour",email:"wjones@underarmour.com",phone:"410-454-6428",sector:"Sports & Fashion",city:"Baltimore"},
+  {id:25,name:"Chuck Presto",title:"SVP, Global Sports Marketing",company:"TaylorMade-adidas Golf",email:"chuck.presto@tmag.com",phone:"760-918-6000",sector:"Sports & Fashion",city:"Carlsbad"},
+  {id:26,name:"Mary Fontamillas",title:"VP, Communications",company:"Michael Kors",email:"mary.fontamillas@michaelkors.com",phone:"212-201-8191",sector:"Sports & Fashion",city:"New York"},
+  {id:27,name:"Johanna Almstead",title:"Marketing Manager",company:"Kate Spade",email:"Jalmstead@katespade.com",phone:"",sector:"Sports & Fashion",city:"New York"},
+  {id:28,name:"Kristen Zaccagnini",title:"Marketing",company:"American Eagle Outfitters",email:"",phone:"412-432-3300",sector:"Sports & Fashion",city:"Pittsburgh"},
+  {id:29,name:"Mark Tatum",title:"EVP, Marketing Partnerships",company:"NBA",email:"mtatum@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:30,name:"Gail Hunter",title:"SVP, Events & Attractions",company:"NBA",email:"ghunter@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:31,name:"Kathy Behrens",title:"EVP, Social Responsibility & Player Programs",company:"NBA",email:"kbehrens@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:32,name:"Frank Supovitz",title:"SVP, Events",company:"NFL Properties",email:"frank.supovitz@nfl.com",phone:"212-450-2000",sector:"Media & Entertainment",city:"New York"},
+  {id:33,name:"Keith Turner",title:"SVP, Media, Sales & Sponsorship",company:"NFL Properties",email:"keith.turner@nfl.com",phone:"212-450-2000",sector:"Media & Entertainment",city:"New York"},
+  {id:34,name:"George Bodenheimer",title:"President, ESPN & ABC Sports",company:"ESPN",email:"george.bodenheimer@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
+  {id:35,name:"Seth Ader",title:"Senior Director, Sports & Marketing",company:"ESPN",email:"seth.ader@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
+  {id:36,name:"Aaron Taylor",title:"VP, Marketing",company:"ESPN",email:"aaron.taylor@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
+  {id:37,name:"Burke Magnus",title:"SVP, ESPN College Sports",company:"ESPN",email:"burke.magnus@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
+  {id:38,name:"Dennis Adamovich",title:"SVP, Brand & Digital Activation",company:"Turner Broadcasting",email:"dennis.adamovich@turner.com",phone:"404-827-1717",sector:"Media & Entertainment",city:"Atlanta"},
+  {id:39,name:"Jennifer Winter",title:"VP, Sponsorship Marketing – Turner Sports",company:"Turner Broadcasting",email:"jennifer.winter@turner.com",phone:"404-827-1717",sector:"Media & Entertainment",city:"Atlanta"},
+  {id:40,name:"Lawrence Aldridge",title:"SVP, Corporate Alliances",company:"Walt Disney Company",email:"lawrence.aldridge@disney.com",phone:"818-560-1000",sector:"Media & Entertainment",city:"Burbank"},
+  {id:41,name:"Ken Potrock",title:"SVP, Global Sports Enterprises",company:"Walt Disney World",email:"ken.potrock@disney.com",phone:"407-824-4321",sector:"Media & Entertainment",city:"Orlando"},
+  {id:42,name:"Susan Jurevics",title:"SVP, Global Retail & Brand Marketing",company:"Sony",email:"susan.jurevics@us.sony.com",phone:"212-833-6800",sector:"Media & Entertainment",city:"New York"},
+  {id:43,name:"Christine Dagousset",title:"EVP, Events & Beauty",company:"Chanel",email:"christine.dagousset@chanelusa.com",phone:"212-688-5055",sector:"Beauty",city:"New York"},
+  {id:44,name:"Pam Alabaster",title:"SVP, Corporate Communications",company:"L'Oreal USA",email:"palabaster@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
+  {id:45,name:"Lisa Capparelli",title:"VP, Interactive Media & Communications",company:"L'Oreal USA",email:"lcapparelli@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
+  {id:46,name:"Susan Akkad",title:"SVP, Corporate Marketing Diversity",company:"Estee Lauder Companies",email:"sakkad@estee.com",phone:"212-572-4200",sector:"Beauty",city:"New York"},
+  {id:47,name:"Jane Lauder",title:"Global President & GM, Origins",company:"Estee Lauder Companies",email:"jlauder@estee.com",phone:"212-572-4200",sector:"Beauty",city:"New York"},
+  {id:48,name:"Suzie Davidowitz",title:"Marketing",company:"L'Oreal USA",email:"sdavidowitz@us.loreal.com",phone:"212-984-4105",sector:"Beauty",city:"New York"},
+  {id:49,name:"Jennifer Fahey",title:"Public Relations",company:"Victoria's Secret",email:"jfahey@victoria.com",phone:"614-577-7121",sector:"Beauty",city:"Columbus"},
+  {id:50,name:"Jessica Igoe",title:"VP, Global Sponsorship & Event Marketing",company:"American Express",email:"jessica.a.Igoe@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
+  {id:51,name:"Rich Lehrfeld",title:"VP, Global Sponsorship Marketing",company:"American Express",email:"rich.lehrfeld@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
+  {id:52,name:"Mary Ann Fitzmaurice-Reilly",title:"SVP, Partnerships & New Business Development",company:"American Express",email:"maryann.fitzmaurice@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
+  {id:53,name:"Courtney Kelso",title:"VP, Sports & Entertainment Access Strategy",company:"American Express",email:"courtney.e.kelso@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
+  {id:54,name:"Barbara Paddock",title:"SVP, Corporate Sponsorship & Event Marketing",company:"JPMorgan Chase",email:"barbara.paddock@jpmchase.com",phone:"212-270-6000",sector:"Finance",city:"New York"},
+  {id:55,name:"Kim Davis",title:"President, JPMorgan Chase Foundation",company:"JPMorgan Chase",email:"kimberly.b.davis@jpmchase.com",phone:"212-270-6000",sector:"Finance",city:"New York"},
+  {id:56,name:"Michael Robichaud",title:"SVP, Global Sponsorships",company:"MasterCard",email:"michael_robichaud@mastercard.com",phone:"914-249-2000",sector:"Finance",city:"Purchase NY"},
+  {id:57,name:"Brian Gendron",title:"Marketing / PR",company:"MasterCard",email:"brian_gendron@mastercard.com",phone:"914-325-1799",sector:"Finance",city:"Purchase NY"},
+  {id:58,name:"Brian Goerke",title:"SVP, Strategic Sponsorships",company:"PNC Financial",email:"brian.goerke@pnc.com",phone:"412-762-2000",sector:"Finance",city:"Pittsburgh"},
+  {id:59,name:"Jeff Elliott",title:"NASCAR Marketing Manager",company:"Bank of America",email:"jeff.elliott@bankofamerica.com",phone:"704-386-4771",sector:"Finance",city:"Charlotte"},
+  {id:60,name:"Ray Bednar",title:"SVP & Global Sponsorship Marketing Executive",company:"Bank of America",email:"",phone:"704-386-4771",sector:"Finance",city:"Charlotte"},
+  {id:61,name:"Tim Collins",title:"EVP, Experiential Marketing",company:"Wells Fargo",email:"tim.collins@wellsfargo.com",phone:"415-547-3000",sector:"Finance",city:"San Francisco"},
+  {id:62,name:"Krista Massey",title:"Director, Sponsorships & Event Marketing",company:"SunTrust Banks",email:"krista.massey@suntrust.com",phone:"404-588-7711",sector:"Finance",city:"Atlanta"},
+  {id:63,name:"Amy Kule",title:"Group VP, National Events & Partnership Marketing",company:"Macy's",email:"amy.kule@macys.com",phone:"212-695-4400",sector:"Retail",city:"New York"},
+  {id:64,name:"Robin Hall",title:"SVP, Macy's Parade & Entertainment Group",company:"Macy's",email:"robin.hall@macys.com",phone:"646-429-6000",sector:"Retail",city:"New York"},
+  {id:65,name:"Laysha Ward",title:"EVP, Community Relations",company:"Target",email:"laysha.ward@target.com",phone:"612-304-6073",sector:"Retail",city:"Minneapolis"},
+  {id:66,name:"Emily Larsen",title:"Director, Events & Publicity",company:"Target",email:"emily.larsen@target.com",phone:"612-304-6073",sector:"Retail",city:"Minneapolis"},
+  {id:67,name:"Kim Whitford",title:"Marketing Administration Manager",company:"Sally Beauty Supply",email:"kwhitford@sallybeauty.com",phone:"940-297-2120",sector:"Retail",city:"Denton TX"},
+  {id:68,name:"Orlando Veras",title:"Publicist",company:"Macy's",email:"Orlando.Veras@macys.com",phone:"646-429-7450",sector:"Retail",city:"New York"},
+  {id:69,name:"Patricia Hennebry",title:"Director, Sponsorship",company:"Verizon",email:"patricia.hennebry@verizon.com",phone:"908-559-2000",sector:"Tech & Telecom",city:"Basking Ridge"},
+  {id:70,name:"Suzy Deering",title:"Executive Director, Brand Marketing & Sponsorships",company:"Verizon",email:"suzy.deering@verizonwireless.com",phone:"908-559-2000",sector:"Tech & Telecom",city:"Basking Ridge"},
+  {id:71,name:"Noah Syken",title:"Manager, Media Planning & Sponsorship",company:"IBM",email:"nsyken@us.ibm.com",phone:"917-472-3150",sector:"Tech & Telecom",city:"New York"},
+  {id:72,name:"Dylan Casey",title:"Brand & Entertainment Marketing Director",company:"Google",email:"dcasey@google.com",phone:"650-253-0000",sector:"Tech & Telecom",city:"Mountain View"},
+  {id:73,name:"Yusuf Mehdi",title:"SVP, Online Audience Business Group",company:"Microsoft",email:"yusufm@microsoft.com",phone:"425-882-8080",sector:"Tech & Telecom",city:"Redmond"},
+  {id:74,name:"Elizabeth Pinkham",title:"SVP, Marketing & Events",company:"Salesforce",email:"epinkham@salesforce.com",phone:"415-901-7000",sector:"Tech & Telecom",city:"San Francisco"},
+  {id:75,name:"Davida Rochman",title:"Marketing / PR",company:"Shure",email:"Rochman_Davida@shure.com",phone:"",sector:"Tech & Telecom",city:"Niles IL"},
+  {id:76,name:"Andy Allmann",title:"Director, Promotions & Sports Marketing",company:"Southwest Airlines",email:"andy.allmann@wnco.com",phone:"214-792-4000",sector:"Travel",city:"Dallas"},
+  {id:77,name:"Jamie Allison",title:"Director, North America Ford Motorsports",company:"Ford Motor Company",email:"jalliso1@ford.com",phone:"313-322-3000",sector:"Auto",city:"Dearborn"},
+  {id:78,name:"Larry Peck",title:"Experiential Marketing Manager",company:"General Motors",email:"larry.peck@gm.com",phone:"313-556-5000",sector:"Auto",city:"Detroit"},
+  {id:79,name:"Earlean Ward",title:"Director, U.S. Events & Motivation",company:"Avon Products",email:"earlean.ward@avon.com",phone:"212-282-5000",sector:"Beauty",city:"New York"},
+  {id:80,name:"Jennifer Iino-Harvey",title:"Sr. Manager, PR & Promotions",company:"Avon Products",email:"jennifer.iinoharvey@avon.com",phone:"212-282-5000",sector:"Beauty",city:"New York"},
+  {id:81,name:"Pam Alabaster",title:"SVP, Corporate Communications",company:"L'Oreal USA",email:"palabaster@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
+  {id:82,name:"Vinay Sharma",title:"Director, Marketing",company:"Kraft Foods",email:"vinay.sharma@kraft.com",phone:"847-646-2000",sector:"Food & Bev",city:"Northfield IL"},
+  {id:83,name:"Yolanda Angulo",title:"Director, Multicultural Marketing",company:"Kraft Foods",email:"yolanda.angulo@kraft.com",phone:"973-503-2000",sector:"Food & Bev",city:"Northfield IL"},
+  {id:84,name:"Brenda Zuck",title:"Manager, Global Design – Kids Equities",company:"Colgate-Palmolive",email:"brenda_zuck@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
+  {id:85,name:"Carla Kelly",title:"General Manager, Multicultural Marketing",company:"Colgate-Palmolive",email:"carla_kelly@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
+  {id:86,name:"Sarah Upbin",title:"Brand Manager, Oral Care Multicultural",company:"Colgate-Palmolive",email:"sarah_upbin@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
+  {id:87,name:"Joy Herfel",title:"President, Polo Ralph Lauren Menswear",company:"Polo Ralph Lauren",email:"joy.herfel@poloralphlauren.com",phone:"212-318-7000",sector:"Sports & Fashion",city:"New York"},
+  {id:88,name:"Leah Salak",title:"Director, Marketing & Events",company:"Liz Claiborne",email:"leah_salak@liz.com",phone:"212-354-4900",sector:"Sports & Fashion",city:"New York"},
+  {id:89,name:"Anne Keating",title:"SVP, Public Relations & Special Events",company:"Bloomingdale's",email:"anne.keating@bloomingdales.com",phone:"212-705-2000",sector:"Retail",city:"New York"},
+  {id:90,name:"Mallory Andrews",title:"SVP, Marketing & Public Relations",company:"Bergdorf Goodman",email:"mallory_andrews@bergdorfgoodman.com",phone:"212-753-7300",sector:"Retail",city:"New York"},
+  {id:91,name:"Alex Keith",title:"VP, North American Laundry",company:"Procter & Gamble",email:"keith.as@pg.com",phone:"513-983-1100",sector:"Beauty",city:"Cincinnati"},
+  {id:92,name:"David Palmer",title:"Brand Manager, Global Sports Marketing",company:"Procter & Gamble",email:"palmer.dw@pg.com",phone:"513-983-1100",sector:"Sports & Fashion",city:"Cincinnati"},
+  {id:93,name:"Greg Via",title:"Director, Global Sports Marketing",company:"Procter & Gamble / Gillette",email:"via.gl@pg.com",phone:"617-463-3000",sector:"Sports & Fashion",city:"Boston"},
+  {id:94,name:"Maria Campbell",title:"Director, Diversity",company:"S.C. Johnson & Son",email:"mlcampbe@scj.com",phone:"262-260-2000",sector:"Beauty",city:"Racine WI"},
+  {id:95,name:"Jackie Parker",title:"VP, Inclusion, Diversity & Corporate Philanthropy",company:"Newell Rubbermaid",email:"jackie.parker@newellco.com",phone:"770-418-7000",sector:"Retail",city:"Atlanta"},
+  {id:96,name:"Chad Ballantyne",title:"Publicist",company:"Dove / Edelman",email:"Chad.Ballantyne@Edelman.com",phone:"212-704-8174",sector:"Beauty",city:"New York"},
+  {id:97,name:"Annette Reichel",title:"Publicist",company:"Dove / Edelman",email:"annette.reichel@edelman.com",phone:"",sector:"Beauty",city:"New York"},
+  {id:98,name:"Randall Chinchilla",title:"PR",company:"Pantene / P&G",email:"chinchilla.r@pg.com",phone:"",sector:"Beauty",city:"Cincinnati"},
+  {id:99,name:"Jennifer Kacmarek",title:"Marketing",company:"Clairol",email:"jkaczmarek@mahercomm.com",phone:"212-485-6812",sector:"Beauty",city:"New York"},
+  {id:100,name:"Nick Raffaele",title:"SVP, Sports Marketing",company:"Callaway Golf",email:"nick.raffaele@callawaygolf.com",phone:"760-931-1771",sector:"Sports & Fashion",city:"Carlsbad"},
+  {id:101,name:"Matt Hall",title:"Marketing",company:"Hanesbrands",email:"matt.hall@hanesbrands.com",phone:"336-519-3386",sector:"Sports & Fashion",city:"Winston-Salem"},
+  {id:102,name:"John Faulkner",title:"Director, Brand Communications",company:"Campbell Soup Company",email:"john_w_faulkner@campbellsoup.com",phone:"856-342-4800",sector:"Food & Bev",city:"Camden NJ"},
+  {id:103,name:"Pat Simmons",title:"VP, Customer Marketing, Events & NASCAR",company:"General Mills",email:"patrick.simmons@genmills.com",phone:"763-764-7600",sector:"Food & Bev",city:"Minneapolis"},
+  {id:104,name:"Ski Austin",title:"EVP, Events & Attractions",company:"National Basketball Association",email:"saustin@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:105,name:"Stu Jackson",title:"EVP, Basketball Operations",company:"NBA",email:"sjackson@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:106,name:"Jennifer Walker",title:"Manager, Marketing Services",company:"AFLAC",email:"jwalker@aflac.com",phone:"706-323-3431",sector:"Finance",city:"Columbus GA"},
+  {id:107,name:"Dan Fleishman",title:"VP, Sponsorships & Emerging Markets",company:"AFLAC",email:"dfleishman@aflac.com",phone:"706-323-3431",sector:"Finance",city:"Columbus GA"},
+  {id:108,name:"Jamie Woods",title:"Director, Sponsorship Marketing",company:"Advance Auto Parts",email:"jamie.woods@advanceauto.com",phone:"540-362-4911",sector:"Auto",city:"Roanoke VA"},
+  {id:109,name:"Michelle Gallagher",title:"Manager, Corporate Sponsorship",company:"Delta Air Lines",email:"michelle.k.gallagher@delta.com",phone:"404-715-2600",sector:"Travel",city:"Atlanta"},
+  {id:110,name:"Dawn Turner",title:"Global Promotions, Sports & Entertainment Marketing Manager",company:"AMR / American Airlines",email:"dawn.turner@aa.com",phone:"817-963-1234",sector:"Travel",city:"Fort Worth"},
+  {id:111,name:"Jon Harris",title:"SVP, Global Communications",company:"Sara Lee Corporation",email:"jon.harris@saralee.com",phone:"630-598-6000",sector:"Food & Bev",city:"Downers Grove"},
+  {id:112,name:"Lauren Radcliffe",title:"Director, Marketing & Brand Entertainment Sponsorships",company:"Dr Pepper Snapple Group",email:"lauren.radcliffe@dpsg.com",phone:"914-612-4000",sector:"Food & Bev",city:"Rye Brook NY"},
+  {id:113,name:"Steve Piehl",title:"Director, Events & Consumer Initiatives",company:"Harley-Davidson",email:"steve.piehl@harley-davidson.com",phone:"414-342-4680",sector:"Auto",city:"Milwaukee"},
+  {id:114,name:"Mary Kathryn Seipke",title:"Director, Sponsorship & Integrated Marketing",company:"Harpo / Oprah",email:"mkseipke@harpo.com",phone:"312-633-1000",sector:"Media & Entertainment",city:"Chicago"},
+  {id:115,name:"Kara Fox-LaRose",title:"VP, Marketing & Promotions",company:"Mohegan Sun",email:"kfoxlarose@mohegansun.com",phone:"860-862-8000",sector:"Travel",city:"Uncasville CT"},
+  {id:116,name:"Lauren Steel",title:"VP, Corporate Affairs",company:"Coca-Cola Bottling Consolidated",email:"lauren.steele@ccbcc.com",phone:"704-557-4000",sector:"Food & Bev",city:"Charlotte"},
+  {id:117,name:"Traci Bermiss",title:"Marketing",company:"PepsiCo",email:"Traci.J.Bermiss@pepsico.com",phone:"",sector:"Food & Bev",city:"Purchase NY"},
+  {id:118,name:"Brian Perkins",title:"Corporate VP, Corporate Affairs",company:"Johnson & Johnson",email:"bperkins@corus.jnj.com",phone:"732-524-0400",sector:"Beauty",city:"New Brunswick"},
+  {id:119,name:"Vanessa Solomon",title:"President, Multicultural Group",company:"Colomer USA",email:"vanessa.solomon@us.thecolomergroup.com",phone:"904-693-1200",sector:"Beauty",city:"Jacksonville"},
+  {id:120,name:"Shawn Tollerson",title:"VP, Marketing – Multicultural Division",company:"Colomer USA",email:"shawn.tollerson@us.thecolomergroup.com",phone:"904-693-1200",sector:"Beauty",city:"Jacksonville"},
+  {id:121,name:"Andrea Hamilton",title:"PR",company:"Organic Root Stimulator",email:"andrea@10squaredpr.com",phone:"404-447-9894",sector:"Beauty",city:"Atlanta"},
+  {id:122,name:"Angela Watts",title:"PR",company:"Organic Root Stimulator",email:"Angela@awmediagroup.com",phone:"678-637-0982",sector:"Beauty",city:"Atlanta"},
+  {id:123,name:"Michelle Wazlawek",title:"Marketing Manager",company:"Enterprise Rent-A-Car",email:"michelle.s.wazlawek@erac.com",phone:"314-512-5000",sector:"Travel",city:"Saint Louis"},
+  {id:124,name:"Liliahn Johnson",title:"Senior Director, Team Marketing & Business Operations",company:"NBA",email:"ljohnson@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:125,name:"Emilio Collins",title:"SVP, Global Marketing Partnerships",company:"NBA",email:"ecollins@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:126,name:"Chris Granger",title:"EVP, Team Marketing & Business Operations",company:"NBA",email:"cgranger@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:127,name:"Seth Winter",title:"SVP, Sales & Marketing – Sports & Olympics",company:"NBCUniversal",email:"seth.winter@nbcuni.com",phone:"212-664-4444",sector:"Media & Entertainment",city:"New York"},
+  {id:128,name:"Gary Zenkel",title:"President, NBC Olympics",company:"NBCUniversal",email:"gary.zenkel@nbcuni.com",phone:"212-664-4444",sector:"Media & Entertainment",city:"New York"},
+  {id:129,name:"Will Funk",title:"SVP, Sports Sponsorships",company:"Turner Broadcasting",email:"will.funk@turner.com",phone:"212-275-6000",sector:"Media & Entertainment",city:"New York"},
+  {id:130,name:"David Levy",title:"President, Turner Sales, Distribution & Sports",company:"Turner Broadcasting",email:"david.levy@turner.com",phone:"212-275-6000",sector:"Media & Entertainment",city:"New York"},
+  {id:131,name:"Pam Kaufman",title:"Chief Marketing Officer, Nickelodeon",company:"Nickelodeon",email:"pam.kaufman@nick.com",phone:"212-258-7500",sector:"Media & Entertainment",city:"New York"},
+  {id:132,name:"Keith Dawkins",title:"GM & SVP, Nickelodeon Tunes",company:"Nickelodeon",email:"keith.dawkins@nick.com",phone:"212-258-7500",sector:"Media & Entertainment",city:"New York"},
+  {id:133,name:"Paxton Baker",title:"President, BET Event Productions",company:"BET Networks",email:"paxton.baker@bet.net",phone:"202-608-2000",sector:"Media & Entertainment",city:"Washington DC"},
+  {id:134,name:"Jeanine Liburd",title:"EVP, Communications & Public Affairs",company:"BET Networks",email:"jeanine.liburd@bet.net",phone:"202-608-2000",sector:"Media & Entertainment",city:"Washington DC"},
+  {id:135,name:"Karin Strelec",title:"Director, Live Events Marketing",company:"World Wrestling Entertainment",email:"karin.strelec@wwecorp.com",phone:"203-352-8600",sector:"Media & Entertainment",city:"Stamford CT"},
+  {id:136,name:"Susan Jurevics",title:"SVP, Global Retail & Brand Marketing",company:"Sony Corporation of America",email:"susan.jurevics@us.sony.com",phone:"212-833-6800",sector:"Media & Entertainment",city:"New York"},
+  {id:137,name:"Dylan Casey",title:"Brand & Entertainment Marketing Director",company:"Google",email:"dcasey@google.com",phone:"650-253-0000",sector:"Tech & Telecom",city:"Mountain View"},
+  {id:138,name:"Brian Diamond",title:"SVP, Specials, Sports & Documentaries",company:"MTV Networks",email:"brian.diamond@mtv.com",phone:"212-767-4001",sector:"Media & Entertainment",city:"New York"},
+  {id:139,name:"Leslie Leventman",title:"EVP, Creative Services & Special Events",company:"MTV Networks",email:"leslie.leventman@mtv.com",phone:"212-258-8000",sector:"Media & Entertainment",city:"New York"},
+  {id:140,name:"Patrick Angel",title:"National Event Logistics Manager",company:"Red Bull North America",email:"patrick.angel@us.redbull.com",phone:"310-393-4647",sector:"Food & Bev",city:"Santa Monica"},
+  {id:141,name:"Mike Poznansky",title:"National Collegiate Marketing Manager",company:"Red Bull North America",email:"mike.poznansky@us.redbull.com",phone:"310-393-4647",sector:"Food & Bev",city:"Santa Monica"},
+  {id:142,name:"Rodnell Workman",title:"VP, Strategic Partnerships",company:"MSG Networks",email:"rodnell.workman@thegarden.com",phone:"212-465-6000",sector:"Media & Entertainment",city:"New York"},
+  {id:143,name:"Joel Fisher",title:"EVP, Madison Square Garden Sports",company:"MSG Networks",email:"joel.fisher@thegarden.com",phone:"212-465-6000",sector:"Media & Entertainment",city:"New York"},
+];
+
+let currentView = 'grid';
+let currentSector = 'All';
+
+function getInitials(name) {
+  return name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+}
+
+function getSectorConfig(sector) {
+  return SECTOR_CONFIG[sector] || { color:'#888', bg:'rgba(136,136,136,0.1)' };
+}
+
+function sectorCounts() {
+  const m = {};
+  ALL_CONTACTS.forEach(c => { m[c.sector] = (m[c.sector]||0)+1; });
+  return m;
+}
+
+function getFiltered() {
+  const search = document.getElementById('search').value.toLowerCase().trim();
+  const sort = document.querySelector('.sort-select').value;
+  let c = ALL_CONTACTS.slice();
+  if (currentSector !== 'All') c = c.filter(x => x.sector === currentSector);
+  if (search) c = c.filter(x =>
+    x.name.toLowerCase().includes(search) ||
+    x.company.toLowerCase().includes(search) ||
+    x.title.toLowerCase().includes(search) ||
+    x.sector.toLowerCase().includes(search) ||
+    x.city.toLowerCase().includes(search)
+  );
+  c.sort((a,b) => a[sort].localeCompare(b[sort]));
+  return c;
+}
+
+function renderStats() {
+  const sc = sectorCounts();
+  const withEmail = ALL_CONTACTS.filter(c=>c.email).length;
+  const topSector = Object.entries(sc).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('stats-row').innerHTML = [
+    {label:'Total contacts', value:'143', sub:'in your network'},
+    {label:'Sectors', value:Object.keys(sc).length, sub:'industries covered'},
+    {label:'Have emails', value:withEmail, sub:`${Math.round(withEmail/143*100)}% verified`},
+    {label:'Top sector', value:topSector[0].split(' ')[0], sub:`${topSector[1]} contacts`},
+    {label:'VP level+', value:ALL_CONTACTS.filter(c=>/VP|SVP|EVP|President|CMO|Chief/.test(c.title)).length, sub:'senior decision-makers'},
+  ].map(s => `
+    <div class="stat-card">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderFilters() {
+  const sc = sectorCounts();
+  const sectors = ['All', ...Object.keys(SECTOR_CONFIG)];
+  document.getElementById('filters').innerHTML = sectors.map(s => {
+    const active = s === currentSector;
+    const cfg = SECTOR_CONFIG[s];
+    const count = s === 'All' ? ALL_CONTACTS.length : (sc[s]||0);
+    const style = active && cfg ? `background:${cfg.bg};border-color:${cfg.color};color:${cfg.color};` : '';
+    return `<button class="filter-btn${active?' active':''}" onclick="setSector('${s}')" style="${style}">${s}${s!=='All'?` (${count})`:''}</button>`;
+  }).join('');
+}
+
+function renderBreakdown() {
+  const sc = sectorCounts();
+  document.getElementById('breakdown-grid').innerHTML = Object.entries(sc)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([sector, count]) => {
+      const cfg = getSectorConfig(sector);
+      return `
+        <div class="breakdown-card" onclick="setSector('${sector}')">
+          <span class="breakdown-name">${sector}</span>
+          <span class="breakdown-count" style="color:${cfg.color}">${count}</span>
+        </div>`;
+    }).join('');
+}
+
+function renderContacts() {
+  const fc = getFiltered();
+  const info = document.getElementById('results-info');
+  info.innerHTML = `Showing <span>${fc.length}</span> of <span>143</span> contacts${currentSector!=='All'?' — filtered by <span>'+currentSector+'</span>':''}`;
+
+  if (fc.length === 0) {
+    document.getElementById('contacts-container').innerHTML = `<div class="empty"><h3>No contacts found</h3><p>Try adjusting your search or filter</p></div>`;
+    return;
+  }
+
+  if (currentView === 'grid') {
+    document.getElementById('contacts-container').innerHTML = `<div class="grid">${fc.map(c => {
+      const cfg = getSectorConfig(c.sector);
+      const initials = getInitials(c.name);
+      return `
+        <div class="contact-card" onclick="openModal(${c.id})" style="border-left-color:${cfg.color}">
+          <div class="card-header">
+            <div class="avatar" style="background:${cfg.bg};color:${cfg.color}">${initials}</div>
+            <div>
+              <div class="card-name">${c.name}</div>
+              <div class="card-company">${c.company}</div>
+            </div>
+          </div>
+          <div class="card-title">${c.title}</div>
+          <div class="card-footer">
+            <span class="sector-badge" style="background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.color}44">${c.sector}</span>
+            <span class="card-city">${c.city}</span>
+          </div>
+          ${c.email ? `<div class="card-email-indicator" style="background:${cfg.color}" title="Has email"></div>` : ''}
+        </div>`;
+    }).join('')}</div>`;
+  } else {
+    document.getElementById('contacts-container').innerHTML = `
+      <div style="display:grid;grid-template-columns:40px 1fr 1fr 140px 100px;gap:14px;padding:8px 16px;font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">
+        <span></span><span>Name</span><span>Title</span><span>Sector</span><span>City</span>
+      </div>
+      <div class="list">${fc.map(c => {
+        const cfg = getSectorConfig(c.sector);
+        return `
+          <div class="list-row" onclick="openModal(${c.id})">
+            <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${cfg.bg};color:${cfg.color}">${getInitials(c.name)}</div>
+            <div><div class="list-name">${c.name}</div><div class="list-company">${c.company}</div></div>
+            <div class="list-title">${c.title}</div>
+            <span class="sector-badge" style="background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.color}44;padding:4px 10px;border-radius:20px;font-size:10px">${c.sector}</span>
+            <span class="list-city">${c.city}</span>
+          </div>`;
+      }).join('')}</div>`;
+  }
+}
+
+function openModal(id) {
+  const c = ALL_CONTACTS.find(x=>x.id===id);
+  if (!c) return;
+  const cfg = getSectorConfig(c.sector);
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-top" style="background:${cfg.color}"></div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-avatar-wrap">
+        <div class="modal-avatar" style="background:${cfg.bg};color:${cfg.color}">${getInitials(c.name)}</div>
+        <div>
+          <div class="modal-name">${c.name}</div>
+          <div class="modal-title">${c.title}</div>
+        </div>
+      </div>
+      <div class="modal-fields">
+        ${[['Company',c.company],['Sector',c.sector],['Email',c.email||'—'],['Phone',c.phone||'—'],['City',c.city||'—']].map(([l,v])=>`
+          <div class="modal-field">
+            <span class="modal-field-label">${l}</span>
+            <span class="modal-field-value" style="${l==='Email'&&v!=='—'?'color:'+cfg.color:''}">${v}</span>
+          </div>`).join('')}
+      </div>
+      <div class="modal-actions">
+        ${c.email?`<button class="modal-btn primary" onclick="window.location.href='mailto:${c.email}'">Email</button>`:''}
+        <button class="modal-btn" onclick="window.open('https://linkedin.com/search/results/people/?keywords='+encodeURIComponent('${c.name} ${c.company}'))">LinkedIn</button>
+        <button class="modal-btn" onclick="copyContact(${c.id})">Copy Info</button>
+      </div>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+function copyContact(id) {
+  const c = ALL_CONTACTS.find(x=>x.id===id);
+  const text = `${c.name}\n${c.title}\n${c.company}\n${c.email||'No email'}\n${c.phone||'No phone'}\n${c.city}`;
+  navigator.clipboard.writeText(text).then(() => alert('Contact info copied!'));
+}
+
+function setSector(s) {
+  currentSector = s;
+  renderFilters();
+  renderContacts();
+}
+
+function setView(v, btn) {
+  currentView = v;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderContacts();
+}
+
+function applyFilters() { renderContacts(); }
+
+function exportCSV() {
+  const fc = getFiltered();
+  const rows = [['Name','Title','Company','Email','Phone','Sector','City'],...fc.map(c=>[c.name,c.title,c.company,c.email,c.phone,c.sector,c.city])];
+  const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sponsorship-contacts.csv';
+  a.click();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+renderStats();
+renderFilters();
+renderBreakdown();
+renderContacts();
+</script>
+</body>
+</html>
