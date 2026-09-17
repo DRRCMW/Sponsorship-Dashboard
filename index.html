@@ -3,947 +3,1453 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sponsorship Command Center</title>
+<title>Sponsorship HQ · Rolodex · Akira Digital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #C8A96E;
-  --gold-dim: #9B7D4A;
-  --gold-glow: rgba(200,169,110,0.15);
-  --bg: #080810;
-  --bg2: #0e0e1a;
-  --bg3: #14141f;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.07);
-  --border: rgba(255,255,255,0.08);
-  --border-gold: rgba(200,169,110,0.25);
-  --text: #f0eee8;
-  --text2: #8a8890;
-  --text3: #5a5860;
-  --blue: #4facfe;
-  --purple: #a78bfa;
-  --green: #34d399;
-  --pink: #f472b6;
-  --orange: #fb923c;
-  --cyan: #22d3ee;
+  --paper: #F4EFE1;
+  --paper-2: #EDE6D2;
+  --card: #FBF7EB;
+  --border: #D4C9AC;
+  --hair: #BDB097;
+  --ink: #141210;
+  --ink-2: #3A342A;
+  --dim: #6E6553;
+  --dim-2: #8E8672;
+  --oxblood: #8E2A18;
+  --oxblood-ink: #6B1F12;
+  --hunter: #1A4A2E;
+  --hunter-ink: #123420;
+  --copper: #B87333;
+  --copper-ink: #8A5322;
+  --shadow: 0 1px 0 rgba(20,18,16,0.05);
+  --serif: 'Fraunces', 'Iowan Old Style', 'Georgia', serif;
+  --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: light; }
 body {
-  font-family: 'Sora', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Animated bg */
-body::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,172,254,0.05) 0%, transparent 60%);
-  pointer-events:none;
-  z-index:0;
-}
-
-/* NAV */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(20px);
-  background: rgba(8,8,16,0.85);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-logo {
-  font-family: 'Space Mono', monospace;
-  font-size: 13px;
-  color: var(--gold);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.nav-logo-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-.nav-right { display:flex; align-items:center; gap:12px; }
-.nav-badge {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--border-gold);
-  color: var(--gold);
-  background: var(--gold-glow);
-  font-family: 'Space Mono', monospace;
-}
-
-/* HERO */
-.hero {
-  padding: 4rem 2rem 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-.hero-eyebrow {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.25em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
-.hero h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #f0eee8 0%, var(--gold) 50%, #f0eee8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero-sub {
-  font-size: 15px;
-  color: var(--text2);
-  max-width: 500px;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-}
-
-/* STATS ROW */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 2.5rem;
-}
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.stat-card:hover { border-color: var(--border-gold); }
-.stat-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0;
-  height:2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity:0;
-  transition: opacity 0.2s;
-}
-.stat-card:hover::before { opacity:1; }
-.stat-label { font-size:11px; color:var(--text3); font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
-.stat-value { font-size:28px; font-weight:700; color:var(--text); line-height:1; }
-.stat-sub { font-size:11px; color:var(--gold); margin-top:4px; }
-
-/* TOOLBAR */
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 1.25rem;
-}
-.search-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 200px;
-}
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text3);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
   font-size: 14px;
-  pointer-events: none;
+  line-height: 1.4;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-#search {
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px 10px 36px;
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Sora', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
-}
-#search:focus { border-color: var(--border-gold); }
-#search::placeholder { color: var(--text3); }
-.view-btns { display:flex; gap:4px; }
-.view-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 14px;
-  color: var(--text2);
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Sora', sans-serif;
-}
-.view-btn:hover, .view-btn.active {
-  background: var(--gold-glow);
-  border-color: var(--border-gold);
-  color: var(--gold);
-}
-.sort-select {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px;
-  color: var(--text2);
-  font-size: 12px;
-  font-family: 'Sora', sans-serif;
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.sort-select:hover { border-color: var(--border-gold); color: var(--text); }
+button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+input, select { font: inherit; }
+a { color: inherit; }
 
-/* SECTOR FILTERS */
-.filters {
+/* Layout shell */
+.shell {
+  display: grid;
+  grid-template-columns: 268px 1fr;
+  min-height: 100vh;
+}
+.scrim {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(20,18,16,0.35);
+  z-index: 39;
+}
+.scrim.on { display: block; }
+
+/* ---------------- Sidebar ---------------- */
+.sidebar {
+  background: var(--paper-2);
+  border-right: 1px solid var(--border);
+  padding: 22px 18px 40px;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: sticky; top: 0;
+}
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; top:0; left:-280px; width: 280px; height: 100vh;
+             max-height: 100vh; z-index: 40;
+             transition: left .2s ease; box-shadow: 0 0 24px rgba(0,0,0,.1); }
+  .sidebar.open { left: 0; }
+  .mobile-menu { display: inline-flex !important; }
+}
+.brand {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: var(--oxblood);
+}
+.brand-tag {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--dim);
+  margin-bottom: 22px;
+  letter-spacing: 0.005em;
+}
+.side-section-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  padding: 14px 4px 8px;
+  border-top: 1px solid var(--hair);
+  margin-top: 8px;
+}
+.side-section-label:first-of-type { border-top: 0; margin-top: 0; padding-top: 4px; }
+
+.meta-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 1.5rem;
-}
-.filter-btn {
-  font-size: 11px;
-  padding: 5px 13px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text3);
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 4px;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Sora', sans-serif;
-  white-space: nowrap;
+  transition: background .12s ease;
+  color: var(--ink);
+  text-align: left;
+  border-left: 2px solid transparent;
 }
-.filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-.filter-btn.active {
+.meta-row:hover { background: rgba(20,18,16,0.04); }
+.meta-row.on {
+  background: rgba(142,42,24,0.08);
+  border-left-color: var(--oxblood);
+}
+.meta-row .expand {
+  color: var(--dim);
+  font-size: 11px;
+  width: 12px;
+  transition: transform .12s ease;
+  flex-shrink: 0;
+}
+.meta-row.expanded .expand { transform: rotate(90deg); }
+.meta-row .name { flex: 1; font-weight: 500; font-size: 13.5px; }
+.meta-row .count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
   font-weight: 500;
 }
+.meta-row.on .count { color: var(--oxblood); font-weight: 600; }
 
-/* RESULTS INFO */
-.results-info {
-  font-size: 12px;
-  color: var(--text3);
-  margin-bottom: 1rem;
-  font-family: 'Space Mono', monospace;
+.sector-list {
+  display: none;
+  padding: 4px 0 8px 24px;
+  border-left: 1px solid var(--hair);
+  margin-left: 14px;
 }
-.results-info span { color: var(--gold); }
+.sector-list.open { display: block; }
+.sector-row {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 5px 8px; border-radius: 3px;
+  cursor: pointer; text-align: left;
+  font-size: 12.5px; color: var(--ink-2);
+}
+.sector-row:hover { background: rgba(20,18,16,0.04); }
+.sector-row.on { background: rgba(26,74,46,0.1); color: var(--hunter); font-weight: 600; }
+.sector-row .sname { flex: 1; line-height: 1.3; }
+.sector-row .scount { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
 
-/* GRID */
-#contacts-container { position: relative; z-index:1; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.side-btn {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 13px; font-weight: 500;
+  color: var(--ink);
+  transition: background .12s;
+}
+.side-btn:hover { background: rgba(20,18,16,0.04); }
+.side-btn .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-C { background: var(--copper); }
+.dot-V { background: var(--oxblood); }
+.dot-H { background: var(--hunter); }
+.dot-D { background: #6E6553; }
+.dot-M { background: #C0B49B; }
+.dot-O { background: #A89C82; }
+.side-btn .scount { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-left: auto; }
+.side-btn.on { background: rgba(20,18,16,0.06); font-weight: 600; }
 
-/* CONTACT CARD */
-.contact-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s;
+.reset-btn {
+  display: block; width: 100%; margin-top: 18px;
+  padding: 9px 12px;
+  background: transparent;
+  border: 1px solid var(--hair);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 600;
+  color: var(--dim);
+  letter-spacing: 0.02em;
+  transition: all .12s;
+}
+.reset-btn:hover { color: var(--oxblood); border-color: var(--oxblood); }
+
+/* ---------------- Main ---------------- */
+.main {
+  display: flex; flex-direction: column;
+  min-width: 0; /* allow shrink for scroll */
+}
+
+/* Masthead — the newspaper front page treatment */
+.masthead {
+  padding: 22px 32px 14px;
+  border-bottom: 3px double var(--ink);
+  background: var(--paper);
+}
+.masthead-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink);
+}
+.masthead-meta .left, .masthead-meta .right { display: flex; gap: 16px; }
+.masthead-meta span { color: var(--dim); }
+.masthead-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+  font-size: clamp(38px, 6vw, 68px);
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  color: var(--ink);
+  padding: 12px 0 6px;
+}
+.masthead-title em {
+  font-style: italic;
+  color: var(--oxblood);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+.masthead-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--dim);
+  padding-top: 4px;
+}
+.mobile-menu {
+  display: none;
+  align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--ink); padding: 6px 10px;
+  border: 1px solid var(--hair); border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* KPI strip — reads like a stats block on the front page */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+.kpi {
+  padding: 14px 22px;
+  border-right: 1px solid var(--border);
   position: relative;
+}
+.kpi:last-child { border-right: 0; }
+.kpi-label {
+  font-family: var(--serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dim);
+}
+.kpi-value {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144;
+  font-size: 30px;
+  line-height: 1.05;
+  margin-top: 2px;
+  color: var(--ink);
+  font-feature-settings: 'tnum' 1;
+}
+.kpi.accent .kpi-value { color: var(--oxblood); }
+.kpi.hunter .kpi-value { color: var(--hunter); }
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 10px; flex-wrap: wrap; align-items: center;
+  padding: 12px 22px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 20;
+}
+.searchbox {
+  flex: 1; min-width: 260px;
+  display: flex; align-items: center;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 4px;
+  padding: 0 10px 0 12px;
+  transition: border-color .12s;
+}
+.searchbox:focus-within { border-color: var(--ink); }
+.searchbox .icon { color: var(--dim); font-size: 14px; margin-right: 6px; }
+#search {
+  flex: 1; border: 0; outline: 0;
+  background: transparent;
+  font-family: var(--sans); font-size: 13.5px;
+  padding: 10px 0;
+  color: var(--ink);
+}
+.kbd {
+  font-family: var(--mono); font-size: 10.5px;
+  padding: 2px 6px;
+  background: var(--paper-2);
+  border: 1px solid var(--hair);
+  border-radius: 3px;
+  color: var(--dim);
+}
+.tool {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px; padding: 0 12px;
+  border: 1px solid var(--hair);
+  border-radius: 4px;
+  background: var(--card);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--ink);
+  transition: all .12s;
+}
+.tool:hover { border-color: var(--ink); }
+.tool.on {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.tool select {
+  border: 0; background: transparent; outline: 0;
+  font-size: 12.5px; font-weight: 500; color: inherit;
+}
+.tool .icon-inline { font-size: 13px; opacity: .8; }
+.view-group {
+  display: inline-flex; overflow: hidden;
+  border: 1px solid var(--hair); border-radius: 4px;
+}
+.view-group .tool {
+  border: 0; border-radius: 0; height: 34px;
+  border-right: 1px solid var(--hair);
+}
+.view-group .tool:last-child { border-right: 0; }
+.tool.primary {
+  background: var(--oxblood); color: var(--paper); border-color: var(--oxblood);
+  font-weight: 600;
+}
+.tool.primary:hover { background: var(--oxblood-ink); }
+
+/* Filter chips (currently active filters) */
+.active-filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 8px 22px 12px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.active-filters:empty { display: none; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 8px 5px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11.5px; font-weight: 500;
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.pill .x {
+  color: var(--dim);
+  font-size: 14px; line-height: 1;
+  padding: 0 2px;
+  border-radius: 50%;
+}
+.pill .x:hover { color: var(--oxblood); }
+.pill.sen { background: var(--paper-2); }
+.results-count {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px; color: var(--dim);
+  margin-left: auto;
+}
+
+/* Bulk action bar */
+.bulk-bar {
+  display: none;
+  padding: 10px 22px;
+  background: var(--ink); color: var(--paper);
+  align-items: center; gap: 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--ink-2);
+}
+.bulk-bar.on { display: flex; }
+.bulk-bar .count { font-family: var(--serif); font-size: 15px; }
+.bulk-bar .link {
+  color: var(--paper); text-decoration: underline;
+  text-underline-offset: 3px; font-weight: 500;
+}
+.bulk-bar .link:hover { color: var(--copper); }
+.bulk-bar .spacer { flex: 1; }
+
+/* Content pane */
+.content {
+  padding: 20px 22px 40px;
+  overflow-x: auto;
+}
+
+/* ---------------- Table view ---------------- */
+.tbl-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
   overflow: hidden;
 }
-.contact-card::before {
-  content:'';
-  position:absolute;
-  left:0; top:0; bottom:0;
-  width:3px;
-  border-radius:3px 0 0 3px;
-  opacity:0.8;
-}
-.contact-card:hover {
-  background: var(--bg3);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-}
-.card-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-.avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  flex-shrink: 0;
-  letter-spacing: 0.05em;
-}
-.card-name { font-size:14px; font-weight:600; color:var(--text); line-height:1.3; }
-.card-company { font-size:11px; color:var(--text2); margin-top:2px; }
-.card-title { font-size:11px; color:var(--text2); line-height:1.5; margin-bottom:12px; height:34px; overflow:hidden; }
-.card-footer { display:flex; justify-content:space-between; align-items:center; }
-.sector-badge {
-  font-size:10px;
-  font-weight:500;
-  padding:3px 9px;
-  border-radius:20px;
-  font-family:'Space Mono',monospace;
-  letter-spacing:0.03em;
-}
-.card-city { font-size:11px; color:var(--text3); }
-.card-email-indicator {
-  width:6px; height:6px; border-radius:50%;
-  position:absolute; top:14px; right:14px;
-}
-
-/* LIST VIEW */
-.list { display:flex; flex-direction:column; gap:6px; }
-.list-row {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: 40px 1fr 1fr 140px 100px 60px;
-  align-items: center;
-  gap: 14px;
-  transition: all 0.15s;
-}
-.list-row:hover { background:var(--bg3); border-color:rgba(255,255,255,0.12); }
-.list-name { font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.list-company { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.list-title { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.list-city { font-size:11px; color:var(--text3); }
-
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(8px);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s;
-}
-.modal-overlay.open { opacity:1; visibility:visible; }
-.modal {
-  background: var(--bg2);
-  border-radius: 20px;
+table.contacts {
   width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.contacts thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+.contacts th.sortable { cursor: pointer; }
+.contacts th.sortable:hover { color: var(--ink); }
+.contacts th .arrow { display: inline-block; margin-left: 4px; opacity: 0; }
+.contacts th.sorted .arrow { opacity: 1; color: var(--oxblood); }
+.contacts td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--paper-2);
+  vertical-align: top;
+}
+.contacts tr:hover td { background: rgba(20,18,16,0.028); }
+.contacts tr.starred td { background: rgba(184,115,51,0.055); }
+.contacts tr.selected td { background: rgba(142,42,24,0.06); }
+.chk { width: 32px; }
+.chk input { transform: translateY(1px); accent-color: var(--oxblood); }
+.name-cell {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.name-cell .sen-dot {
+  display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  translate: 0 -1px;
+}
+.title-cell { color: var(--ink-2); font-size: 12.5px; max-width: 320px; }
+.co-cell { font-weight: 600; color: var(--ink); }
+.sector-cell {
+  font-size: 11.5px;
+  color: var(--dim);
+  font-family: var(--sans);
+}
+.sector-cell .meta {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--hunter);
+  font-size: 11.5px;
+}
+.email-cell {
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.email-cell a { color: var(--oxblood); text-decoration: none; }
+.email-cell a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.phone-cell { font-family: var(--mono); font-size: 11.5px; }
+.phone-cell a { color: var(--hunter); text-decoration: none; }
+.phone-cell a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.phone-dash { color: var(--dim-2); }
+.actions {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--dim);
+}
+.icon-btn {
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 3px; color: var(--dim);
+  transition: all .12s;
+  font-size: 13px;
+}
+.icon-btn:hover { background: var(--paper-2); color: var(--ink); }
+.icon-btn.star.on { color: var(--copper); }
+.icon-btn.li:hover { color: #0A66C2; }
+
+/* ---------------- Card view ---------------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 16px 12px;
   position: relative;
-  transform: scale(0.95) translateY(20px);
-  transition: transform 0.2s;
+  transition: border-color .12s, transform .12s;
+  cursor: pointer;
+  overflow: hidden;
 }
-.modal-overlay.open .modal { transform:scale(1) translateY(0); }
-.modal-top { height:4px; border-radius:20px 20px 0 0; }
-.modal-body { padding:1.75rem; }
-.modal-close {
-  position:absolute; top:1rem; right:1rem;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:8px; width:32px; height:32px;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--text2); font-size:16px;
-  transition:all 0.15s; z-index:1;
+.card:hover { border-color: var(--ink); }
+.card.starred {
+  border-color: var(--copper);
+  background: linear-gradient(180deg, rgba(184,115,51,0.03), var(--card) 30%);
 }
-.modal-close:hover { background:var(--surface-hover); color:var(--text); }
-.modal-avatar-wrap { display:flex; align-items:center; gap:16px; margin-bottom:1.5rem; }
-.modal-avatar {
-  width:60px; height:60px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; font-weight:700; flex-shrink:0;
+.card.starred::after {
+  content: ""; position: absolute; top: 0; right: 0;
+  width: 22px; height: 22px;
+  background: linear-gradient(225deg, var(--copper) 50%, transparent 50%);
 }
-.modal-name { font-size:18px; font-weight:700; color:var(--text); margin-bottom:4px; }
-.modal-title { font-size:13px; color:var(--text2); line-height:1.5; }
-.modal-fields { border-top:1px solid var(--border); padding-top:1.25rem; }
-.modal-field { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); gap:12px; }
-.modal-field-label { font-size:12px; color:var(--text3); flex-shrink:0; font-family:'Space Mono',monospace; }
-.modal-field-value { font-size:12px; color:var(--text); text-align:right; word-break:break-all; }
-.modal-actions { display:flex; gap:8px; margin-top:1.25rem; }
-.modal-btn {
-  flex:1; padding:10px; font-size:12px; font-weight:500;
-  border-radius:10px; cursor:pointer; transition:all 0.15s;
-  font-family:'Sora',sans-serif; border:1px solid var(--border);
-  background:var(--surface); color:var(--text);
+.card .tab {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: var(--paper-2);
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--dim);
 }
-.modal-btn:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.2); }
-.modal-btn.primary { border-color:var(--border-gold); background:var(--gold-glow); color:var(--gold); }
-.modal-btn.primary:hover { background:rgba(200,169,110,0.25); }
+.card .tab.C { border-left-color: var(--copper); color: var(--copper-ink); background: rgba(184,115,51,0.1); }
+.card .tab.V { border-left-color: var(--oxblood); color: var(--oxblood); background: rgba(142,42,24,0.08); }
+.card .tab.H { border-left-color: var(--hunter); color: var(--hunter); background: rgba(26,74,46,0.08); }
+.card .tab.D { border-left-color: #6E6553; }
+.card-name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variation-settings: 'opsz' 60, 'SOFT' 30;
+  font-size: 20px;
+  line-height: 1.15;
+  color: var(--ink);
+  padding-right: 60px;
+  letter-spacing: -0.01em;
+}
+.card-title {
+  color: var(--ink-2);
+  font-size: 12.5px;
+  margin-top: 4px;
+  line-height: 1.35;
+}
+.card-co {
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 8px;
+  font-size: 13px;
+}
+.card-sector {
+  margin-top: 4px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--hunter);
+  font-size: 12px;
+}
+.card-contact {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--paper-2);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.card-email {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--oxblood);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-phone {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--hunter);
+  display: flex; align-items: center; gap: 6px;
+}
+.card-phone::before {
+  content: "☎"; font-size: 11px; color: var(--dim);
+}
+.card-actions {
+  position: absolute; top: 12px; right: 12px;
+  display: flex; gap: 2px;
+}
 
-/* SECTOR BREAKDOWN */
-.breakdown-section { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); }
-.section-title {
-  font-family:'Space Mono',monospace; font-size:11px;
-  text-transform:uppercase; letter-spacing:0.2em;
-  color:var(--gold); margin-bottom:1.25rem;
-  display:flex; align-items:center; gap:8px;
+/* Pagination */
+.pagination {
+  display: flex; justify-content: center; align-items: center;
+  gap: 8px;
+  padding: 22px 0 4px;
+  font-size: 12.5px;
+  color: var(--dim);
 }
-.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
-.breakdown-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
-.breakdown-card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px 14px;
-  cursor:pointer;
-  transition:all 0.15s;
-  display:flex; align-items:center; justify-content:space-between;
+.page-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--hair);
+  border-radius: 3px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 12.5px;
+  transition: all .12s;
 }
-.breakdown-card:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.12); }
-.breakdown-name { font-size:12px; font-weight:500; color:var(--text); }
-.breakdown-count { font-size:20px; font-weight:700; }
+.page-btn:hover:not(:disabled) { border-color: var(--ink); }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-info { font-family: var(--mono); }
 
-/* BUSINESS SECTION */
-.biz-section { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); }
-.biz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
-.biz-card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:1.5rem;
-  transition:all 0.2s;
+/* ---------------- Detail drawer ---------------- */
+.drawer-scrim {
+  display: none; position: fixed; inset: 0;
+  background: rgba(20,18,16,0.4); z-index: 50;
 }
-.biz-card:hover { background:var(--surface-hover); border-color:rgba(255,255,255,0.15); }
-.biz-icon { font-size:24px; margin-bottom:12px; }
-.biz-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
-.biz-desc { font-size:12px; color:var(--text2); line-height:1.7; }
-.biz-revenue { font-size:11px; font-family:'Space Mono',monospace; color:var(--gold); margin-top:8px; padding:4px 10px; border:1px solid var(--border-gold); border-radius:20px; display:inline-block; }
-
-/* FOOTER */
-footer {
-  margin-top:4rem;
-  padding:2rem;
-  border-top:1px solid var(--border);
-  text-align:center;
-  font-size:12px;
-  color:var(--text3);
-  font-family:'Space Mono',monospace;
+.drawer-scrim.on { display: block; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(500px, 100vw);
+  background: var(--paper);
+  border-left: 1px solid var(--border);
+  z-index: 51;
+  transform: translateX(100%);
+  transition: transform .22s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.08);
 }
-footer span { color:var(--gold); }
+.drawer.on { transform: translateX(0); }
+.drawer-head {
+  padding: 22px 24px 16px;
+  border-bottom: 3px double var(--ink);
+  position: relative;
+}
+.drawer-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px;
+  border-radius: 3px;
+  color: var(--dim);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.drawer-close:hover { background: var(--paper-2); color: var(--ink); }
+.drawer-tab {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 8px;
+}
+.drawer-name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: 34px;
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.drawer-title {
+  font-family: var(--serif); font-style: italic;
+  font-size: 15px; color: var(--dim);
+  margin-top: 6px; line-height: 1.35;
+}
+.drawer-body { padding: 20px 24px 40px; }
+.field {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hair);
+}
+.field:last-child { border-bottom: 0; }
+.field-label {
+  font-family: var(--serif); font-weight: 600;
+  font-size: 10.5px; letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+.field-value {
+  font-size: 14px; color: var(--ink);
+  word-break: break-word;
+}
+.field-value.mono { font-family: var(--mono); font-size: 12.5px; }
+.field-value a { color: var(--oxblood); text-decoration: none; }
+.field-value a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.drawer-actions {
+  display: flex; gap: 8px; padding-top: 18px;
+}
+.drawer-actions .btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  font-size: 12.5px; font-weight: 600;
+  background: var(--card); color: var(--ink);
+  text-align: center;
+  transition: all .12s;
+}
+.drawer-actions .btn.primary { background: var(--oxblood); color: var(--paper); border-color: var(--oxblood); }
+.drawer-actions .btn.primary:hover { background: var(--oxblood-ink); }
+.drawer-actions .btn:hover { background: var(--paper-2); }
+.drawer-actions .btn.starred { background: var(--copper); color: var(--paper); border-color: var(--copper); }
 
-/* EMPTY */
+/* Empty state */
 .empty {
-  text-align:center; padding:4rem 2rem;
-  color:var(--text3);
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--dim);
 }
-.empty h3 { font-size:16px; color:var(--text2); margin-bottom:8px; }
+.empty h3 {
+  font-family: var(--serif);
+  font-weight: 500; font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.empty p { font-family: var(--serif); font-style: italic; font-size: 14px; }
 
-/* SCROLLBAR */
-::-webkit-scrollbar { width:6px; }
-::-webkit-scrollbar-track { background:var(--bg); }
-::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
-::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.2); }
+/* Toast for copy confirmation */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 18px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-family: var(--serif); font-style: italic;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  opacity: 0; pointer-events: none;
+  transition: all .2s ease;
+  z-index: 100;
+}
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* RESPONSIVE */
-@media(max-width:600px) {
-  .list-row { grid-template-columns:36px 1fr 120px; }
-  .list-title, .list-city, .list-row .sector-badge:not(:nth-child(5)) { display:none; }
-  .hero h1 { font-size:1.8rem; }
-  nav { padding:0 1rem; }
+/* Print / A11y niceties */
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 2px;
 }
 </style>
 </head>
 <body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">Sponsorship HQ</div>
+    <div class="brand-tag">Your network. Your power.</div>
 
-<nav>
-  <a href="#" class="nav-logo">
-    <span class="nav-logo-dot"></span>
-    Sponsorship HQ
-  </a>
-  <div class="nav-right">
-    <span class="nav-badge" id="nav-count">143 contacts</span>
-    <span class="nav-badge" style="cursor:pointer" onclick="exportCSV()">Export CSV</span>
-  </div>
-</nav>
+    <div class="side-section-label">Verticals</div>
+    <div id="metaList"></div>
 
-<div class="hero" style="max-width:1400px;margin:0 auto">
+    <div class="side-section-label">Seniority</div>
+    <div id="senList"></div>
 
-  <div class="hero-eyebrow">Sponsorship Command Center</div>
-  <h1>Your Network.<br>Your Power.</h1>
-  <p class="hero-sub">143 decision-makers across entertainment, sports, media, and finance. One command center to rule them all.</p>
+    <div class="side-section-label">Quick filters</div>
+    <button class="side-btn" id="phoneToggle">
+      <span class="dot" style="background:var(--hunter)"></span>
+      <span>Has phone number</span>
+      <span class="scount" id="phoneCount">97</span>
+    </button>
+    <button class="side-btn" id="shortlistToggle">
+      <span class="dot" style="background:var(--copper)"></span>
+      <span>Shortlist</span>
+      <span class="scount" id="shortlistCount">0</span>
+    </button>
 
-  <!-- STATS -->
-  <div class="stats-row" id="stats-row"></div>
+    <button class="reset-btn" id="resetBtn">Clear all filters</button>
+  </aside>
 
-  <!-- TOOLBAR -->
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input id="search" type="text" placeholder="Search name, company, title, sector..." oninput="applyFilters()">
-    </div>
-    <div class="view-btns">
-      <button class="view-btn active" onclick="setView('grid',this)">Grid</button>
-      <button class="view-btn" onclick="setView('list',this)">List</button>
-    </div>
-    <select class="sort-select" onchange="applyFilters()">
-      <option value="name">Sort: Name</option>
-      <option value="company">Sort: Company</option>
-      <option value="sector">Sort: Sector</option>
-    </select>
-  </div>
+  <div class="scrim" id="scrim"></div>
 
-  <!-- FILTERS -->
-  <div class="filters" id="filters"></div>
-
-  <!-- RESULTS INFO -->
-  <div class="results-info" id="results-info"></div>
-
-  <!-- CONTACTS -->
-  <div id="contacts-container"></div>
-
-  <!-- SECTOR BREAKDOWN -->
-  <div class="breakdown-section">
-    <div class="section-title">Sector Breakdown</div>
-    <div class="breakdown-grid" id="breakdown-grid"></div>
-  </div>
-
-  <!-- BUSINESS OPPORTUNITIES -->
-  <div class="biz-section">
-    <div class="section-title">Scale Your Business</div>
-    <div class="biz-grid">
-      <div class="biz-card">
-        <div class="biz-icon">🎵</div>
-        <div class="biz-title">Artist Sponsorship Consulting</div>
-        <div class="biz-desc">Bridge artists and managers to your VP-level brand contacts. A single Heineken or Coca-Cola activation deal closes at $50K–$500K. You earn 10–15% as the connector.</div>
-        <div class="biz-revenue">$50K – $500K per deal</div>
-      </div>
-      <div class="biz-card">
-        <div class="biz-icon">🎪</div>
-        <div class="biz-title">Event Activation Brokering</div>
-        <div class="biz-desc">AmEx, Mastercard, and Wells Fargo spend millions activating at concerts and festivals. Position yourself as the entertainment connector who gets their brand into BET Awards, Essence Fest, SXSW.</div>
-        <div class="biz-revenue">$25K – $150K per placement</div>
-      </div>
-      <div class="biz-card">
-        <div class="biz-icon">📋</div>
-        <div class="biz-title">Monthly Retainer Consulting</div>
-        <div class="biz-desc">Indie labels, emerging artists, and entertainment companies need someone who knows brand-side relationships. Offer monthly retainer services managing their outreach and partnership pipeline.</div>
-        <div class="biz-revenue">$2K – $5K/month per client</div>
-      </div>
-      <div class="biz-card">
-        <div class="biz-icon">🎯</div>
-        <div class="biz-title">Multicultural Marketing</div>
-        <div class="biz-desc">Colgate, L'Oreal, Avon, and Kraft Foods all have dedicated multicultural marketing teams in your list. Black entertainment and music is their top activation channel.</div>
-        <div class="biz-revenue">High demand, premium rates</div>
-      </div>
-      <div class="biz-card">
-        <div class="biz-icon">🏀</div>
-        <div class="biz-title">Sports x Music Crossover</div>
-        <div class="biz-desc">Howard White at Nike's Jordan Brand and the NBA's Mark Tatum both live at the intersection of sports and culture. Pitch integrated deals that touch both worlds simultaneously.</div>
-        <div class="biz-revenue">Largest deal sizes in category</div>
-      </div>
-      <div class="biz-card">
-        <div class="biz-icon">🌐</div>
-        <div class="biz-title">Build a Boutique Agency</div>
-        <div class="biz-desc">Package your network as a full-service boutique agency. 5 retainer clients at $3K/month = $180K ARR before any deal commissions. This list is the unfair advantage no one else has.</div>
-        <div class="biz-revenue">$180K+ ARR at scale</div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
-  <div class="modal" id="modal-content"></div>
-</div>
-
-<footer>
-  Sponsorship Command Center &mdash; <span id="year"></span>
-</footer>
-
-<script>
-document.getElementById('year').textContent = new Date().getFullYear();
-
-const SECTOR_CONFIG = {
-  "Media & Entertainment": { color:"#e94560", bg:"rgba(233,69,96,0.12)" },
-  "Sports & Fashion":      { color:"#4facfe", bg:"rgba(79,172,254,0.12)" },
-  "Food & Bev":            { color:"#7ed321", bg:"rgba(126,211,33,0.12)" },
-  "Finance":               { color:"#f5a623", bg:"rgba(245,166,35,0.12)" },
-  "Spirits":               { color:"#c084fc", bg:"rgba(192,132,252,0.12)" },
-  "Retail":                { color:"#22d3ee", bg:"rgba(34,211,238,0.12)" },
-  "Beauty":                { color:"#f472b6", bg:"rgba(244,114,182,0.12)" },
-  "Tech & Telecom":        { color:"#34d399", bg:"rgba(52,211,153,0.12)" },
-  "Auto":                  { color:"#fb923c", bg:"rgba(251,146,60,0.12)" },
-  "Travel":                { color:"#818cf8", bg:"rgba(129,140,248,0.12)" },
-};
-
-const ALL_CONTACTS = [
-  {id:1,name:"Brad Ross",title:"VP, Global Sports Entertainment & Partnerships",company:"The Coca-Cola Company",email:"",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
-  {id:2,name:"Scott McCune",title:"VP, Global Partnerships & Experiential Marketing",company:"The Coca-Cola Company",email:"smccune@na.ko.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
-  {id:3,name:"John Egan",title:"Group Director, Sports Marketing",company:"The Coca-Cola Company",email:"jegan@na.ko.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
-  {id:4,name:"Wendy Clark",title:"SVP, Integrated Marketing Communications",company:"The Coca-Cola Company",email:"wclark@cokecce.com",phone:"404-676-2121",sector:"Food & Bev",city:"Atlanta"},
-  {id:5,name:"Jeff Dubiel",title:"VP, Sports Marketing",company:"PepsiCo",email:"jeff.dubiel@pepsi.com",phone:"914-253-2000",sector:"Food & Bev",city:"Purchase NY"},
-  {id:6,name:"Jennifer Storms",title:"SVP, Sports Marketing – Gatorade",company:"PepsiCo",email:"",phone:"312-821-1000",sector:"Food & Bev",city:"Chicago"},
-  {id:7,name:"Javier Farfan",title:"VP of Marketing",company:"PepsiCo",email:"javier.farfan@pepsico.com",phone:"914-253-2000",sector:"Food & Bev",city:"Purchase NY"},
-  {id:8,name:"Peter Sterling",title:"VP, Marketing – U.S.",company:"McDonald's",email:"peter.sterling@us.mcd.com",phone:"630-623-3000",sector:"Food & Bev",city:"Oak Brook"},
-  {id:9,name:"John Lewicki",title:"Senior Director, Alliance & Event Marketing",company:"McDonald's",email:"john.lewicki@us.mcd.com",phone:"630-623-3000",sector:"Food & Bev",city:"Oak Brook"},
-  {id:10,name:"Pattie Falch",title:"Manager, Events & Sponsorships",company:"Heineken USA",email:"pfalch@heinekenusa.com",phone:"212-808-9498",sector:"Spirits",city:"New York"},
-  {id:11,name:"Jeffrey Moran",title:"VP, Public Relations, Events & Sponsorship",company:"Pernod Ricard USA",email:"jeffrey.moran@pernodricard-usa.com",phone:"914-848-4800",sector:"Spirits",city:"Purchase NY"},
-  {id:12,name:"Dave Karraker",title:"Brand Manager",company:"Skyy Spirits / Campari",email:"Dave.Karraker@campari.com",phone:"415-315-8082",sector:"Spirits",city:"San Francisco"},
-  {id:13,name:"Jim Tietjens",title:"Senior Director, Trade Marketing",company:"Anheuser-Busch InBev",email:"jim.tietjens@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
-  {id:14,name:"Mark Wright",title:"VP, Media & Sports Entertainment Marketing",company:"Anheuser-Busch InBev",email:"mark.wright@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
-  {id:15,name:"Brad Brown",title:"Senior Director, Sports Marketing",company:"Anheuser-Busch InBev",email:"brad.brown@anheuser-busch.com",phone:"314-577-2000",sector:"Spirits",city:"Saint Louis"},
-  {id:16,name:"Tony Fair",title:"Brand Manager",company:"Belvedere / Moet Hennessey",email:"tony.fair@mhusa.com",phone:"",sector:"Spirits",city:"New York"},
-  {id:17,name:"Pam",title:"Marketing / PR",company:"Patron Spirits",email:"pam@patronspirits.com",phone:"",sector:"Spirits",city:"Las Vegas"},
-  {id:18,name:"Ann Miller",title:"EVP, Global Sports Marketing",company:"Nike",email:"ann.miller@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
-  {id:19,name:"Howard White",title:"VP, Jordan Brand",company:"Nike",email:"howard.white@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
-  {id:20,name:"John Slusher",title:"VP, Global Sports Marketing",company:"Nike",email:"john.slusher@nike.com",phone:"503-671-6453",sector:"Sports & Fashion",city:"Beaverton"},
-  {id:21,name:"Aaron Barrett",title:"Sports Marketing Coordinator",company:"Adidas America",email:"aaron.barrett@adidas.com",phone:"971-234-2300",sector:"Sports & Fashion",city:"Portland"},
-  {id:22,name:"Jeff McAllister",title:"MLS Coordinator, Soccer Sports Marketing",company:"Adidas America",email:"jeff.mcallister@adidas.com",phone:"971-234-2300",sector:"Sports & Fashion",city:"Portland"},
-  {id:23,name:"Matthew Mirchin",title:"SVP, Sports Marketing",company:"Under Armour",email:"mmirchin@underarmour.com",phone:"410-454-6428",sector:"Sports & Fashion",city:"Baltimore"},
-  {id:24,name:"Walker Jones",title:"Director, NCAA & Sports Marketing",company:"Under Armour",email:"wjones@underarmour.com",phone:"410-454-6428",sector:"Sports & Fashion",city:"Baltimore"},
-  {id:25,name:"Chuck Presto",title:"SVP, Global Sports Marketing",company:"TaylorMade-adidas Golf",email:"chuck.presto@tmag.com",phone:"760-918-6000",sector:"Sports & Fashion",city:"Carlsbad"},
-  {id:26,name:"Mary Fontamillas",title:"VP, Communications",company:"Michael Kors",email:"mary.fontamillas@michaelkors.com",phone:"212-201-8191",sector:"Sports & Fashion",city:"New York"},
-  {id:27,name:"Johanna Almstead",title:"Marketing Manager",company:"Kate Spade",email:"Jalmstead@katespade.com",phone:"",sector:"Sports & Fashion",city:"New York"},
-  {id:28,name:"Kristen Zaccagnini",title:"Marketing",company:"American Eagle Outfitters",email:"",phone:"412-432-3300",sector:"Sports & Fashion",city:"Pittsburgh"},
-  {id:29,name:"Mark Tatum",title:"EVP, Marketing Partnerships",company:"NBA",email:"mtatum@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:30,name:"Gail Hunter",title:"SVP, Events & Attractions",company:"NBA",email:"ghunter@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:31,name:"Kathy Behrens",title:"EVP, Social Responsibility & Player Programs",company:"NBA",email:"kbehrens@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:32,name:"Frank Supovitz",title:"SVP, Events",company:"NFL Properties",email:"frank.supovitz@nfl.com",phone:"212-450-2000",sector:"Media & Entertainment",city:"New York"},
-  {id:33,name:"Keith Turner",title:"SVP, Media, Sales & Sponsorship",company:"NFL Properties",email:"keith.turner@nfl.com",phone:"212-450-2000",sector:"Media & Entertainment",city:"New York"},
-  {id:34,name:"George Bodenheimer",title:"President, ESPN & ABC Sports",company:"ESPN",email:"george.bodenheimer@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
-  {id:35,name:"Seth Ader",title:"Senior Director, Sports & Marketing",company:"ESPN",email:"seth.ader@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
-  {id:36,name:"Aaron Taylor",title:"VP, Marketing",company:"ESPN",email:"aaron.taylor@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
-  {id:37,name:"Burke Magnus",title:"SVP, ESPN College Sports",company:"ESPN",email:"burke.magnus@espn.com",phone:"212-456-7777",sector:"Media & Entertainment",city:"New York"},
-  {id:38,name:"Dennis Adamovich",title:"SVP, Brand & Digital Activation",company:"Turner Broadcasting",email:"dennis.adamovich@turner.com",phone:"404-827-1717",sector:"Media & Entertainment",city:"Atlanta"},
-  {id:39,name:"Jennifer Winter",title:"VP, Sponsorship Marketing – Turner Sports",company:"Turner Broadcasting",email:"jennifer.winter@turner.com",phone:"404-827-1717",sector:"Media & Entertainment",city:"Atlanta"},
-  {id:40,name:"Lawrence Aldridge",title:"SVP, Corporate Alliances",company:"Walt Disney Company",email:"lawrence.aldridge@disney.com",phone:"818-560-1000",sector:"Media & Entertainment",city:"Burbank"},
-  {id:41,name:"Ken Potrock",title:"SVP, Global Sports Enterprises",company:"Walt Disney World",email:"ken.potrock@disney.com",phone:"407-824-4321",sector:"Media & Entertainment",city:"Orlando"},
-  {id:42,name:"Susan Jurevics",title:"SVP, Global Retail & Brand Marketing",company:"Sony",email:"susan.jurevics@us.sony.com",phone:"212-833-6800",sector:"Media & Entertainment",city:"New York"},
-  {id:43,name:"Christine Dagousset",title:"EVP, Events & Beauty",company:"Chanel",email:"christine.dagousset@chanelusa.com",phone:"212-688-5055",sector:"Beauty",city:"New York"},
-  {id:44,name:"Pam Alabaster",title:"SVP, Corporate Communications",company:"L'Oreal USA",email:"palabaster@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
-  {id:45,name:"Lisa Capparelli",title:"VP, Interactive Media & Communications",company:"L'Oreal USA",email:"lcapparelli@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
-  {id:46,name:"Susan Akkad",title:"SVP, Corporate Marketing Diversity",company:"Estee Lauder Companies",email:"sakkad@estee.com",phone:"212-572-4200",sector:"Beauty",city:"New York"},
-  {id:47,name:"Jane Lauder",title:"Global President & GM, Origins",company:"Estee Lauder Companies",email:"jlauder@estee.com",phone:"212-572-4200",sector:"Beauty",city:"New York"},
-  {id:48,name:"Suzie Davidowitz",title:"Marketing",company:"L'Oreal USA",email:"sdavidowitz@us.loreal.com",phone:"212-984-4105",sector:"Beauty",city:"New York"},
-  {id:49,name:"Jennifer Fahey",title:"Public Relations",company:"Victoria's Secret",email:"jfahey@victoria.com",phone:"614-577-7121",sector:"Beauty",city:"Columbus"},
-  {id:50,name:"Jessica Igoe",title:"VP, Global Sponsorship & Event Marketing",company:"American Express",email:"jessica.a.Igoe@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
-  {id:51,name:"Rich Lehrfeld",title:"VP, Global Sponsorship Marketing",company:"American Express",email:"rich.lehrfeld@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
-  {id:52,name:"Mary Ann Fitzmaurice-Reilly",title:"SVP, Partnerships & New Business Development",company:"American Express",email:"maryann.fitzmaurice@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
-  {id:53,name:"Courtney Kelso",title:"VP, Sports & Entertainment Access Strategy",company:"American Express",email:"courtney.e.kelso@aexp.com",phone:"212-640-2000",sector:"Finance",city:"New York"},
-  {id:54,name:"Barbara Paddock",title:"SVP, Corporate Sponsorship & Event Marketing",company:"JPMorgan Chase",email:"barbara.paddock@jpmchase.com",phone:"212-270-6000",sector:"Finance",city:"New York"},
-  {id:55,name:"Kim Davis",title:"President, JPMorgan Chase Foundation",company:"JPMorgan Chase",email:"kimberly.b.davis@jpmchase.com",phone:"212-270-6000",sector:"Finance",city:"New York"},
-  {id:56,name:"Michael Robichaud",title:"SVP, Global Sponsorships",company:"MasterCard",email:"michael_robichaud@mastercard.com",phone:"914-249-2000",sector:"Finance",city:"Purchase NY"},
-  {id:57,name:"Brian Gendron",title:"Marketing / PR",company:"MasterCard",email:"brian_gendron@mastercard.com",phone:"914-325-1799",sector:"Finance",city:"Purchase NY"},
-  {id:58,name:"Brian Goerke",title:"SVP, Strategic Sponsorships",company:"PNC Financial",email:"brian.goerke@pnc.com",phone:"412-762-2000",sector:"Finance",city:"Pittsburgh"},
-  {id:59,name:"Jeff Elliott",title:"NASCAR Marketing Manager",company:"Bank of America",email:"jeff.elliott@bankofamerica.com",phone:"704-386-4771",sector:"Finance",city:"Charlotte"},
-  {id:60,name:"Ray Bednar",title:"SVP & Global Sponsorship Marketing Executive",company:"Bank of America",email:"",phone:"704-386-4771",sector:"Finance",city:"Charlotte"},
-  {id:61,name:"Tim Collins",title:"EVP, Experiential Marketing",company:"Wells Fargo",email:"tim.collins@wellsfargo.com",phone:"415-547-3000",sector:"Finance",city:"San Francisco"},
-  {id:62,name:"Krista Massey",title:"Director, Sponsorships & Event Marketing",company:"SunTrust Banks",email:"krista.massey@suntrust.com",phone:"404-588-7711",sector:"Finance",city:"Atlanta"},
-  {id:63,name:"Amy Kule",title:"Group VP, National Events & Partnership Marketing",company:"Macy's",email:"amy.kule@macys.com",phone:"212-695-4400",sector:"Retail",city:"New York"},
-  {id:64,name:"Robin Hall",title:"SVP, Macy's Parade & Entertainment Group",company:"Macy's",email:"robin.hall@macys.com",phone:"646-429-6000",sector:"Retail",city:"New York"},
-  {id:65,name:"Laysha Ward",title:"EVP, Community Relations",company:"Target",email:"laysha.ward@target.com",phone:"612-304-6073",sector:"Retail",city:"Minneapolis"},
-  {id:66,name:"Emily Larsen",title:"Director, Events & Publicity",company:"Target",email:"emily.larsen@target.com",phone:"612-304-6073",sector:"Retail",city:"Minneapolis"},
-  {id:67,name:"Kim Whitford",title:"Marketing Administration Manager",company:"Sally Beauty Supply",email:"kwhitford@sallybeauty.com",phone:"940-297-2120",sector:"Retail",city:"Denton TX"},
-  {id:68,name:"Orlando Veras",title:"Publicist",company:"Macy's",email:"Orlando.Veras@macys.com",phone:"646-429-7450",sector:"Retail",city:"New York"},
-  {id:69,name:"Patricia Hennebry",title:"Director, Sponsorship",company:"Verizon",email:"patricia.hennebry@verizon.com",phone:"908-559-2000",sector:"Tech & Telecom",city:"Basking Ridge"},
-  {id:70,name:"Suzy Deering",title:"Executive Director, Brand Marketing & Sponsorships",company:"Verizon",email:"suzy.deering@verizonwireless.com",phone:"908-559-2000",sector:"Tech & Telecom",city:"Basking Ridge"},
-  {id:71,name:"Noah Syken",title:"Manager, Media Planning & Sponsorship",company:"IBM",email:"nsyken@us.ibm.com",phone:"917-472-3150",sector:"Tech & Telecom",city:"New York"},
-  {id:72,name:"Dylan Casey",title:"Brand & Entertainment Marketing Director",company:"Google",email:"dcasey@google.com",phone:"650-253-0000",sector:"Tech & Telecom",city:"Mountain View"},
-  {id:73,name:"Yusuf Mehdi",title:"SVP, Online Audience Business Group",company:"Microsoft",email:"yusufm@microsoft.com",phone:"425-882-8080",sector:"Tech & Telecom",city:"Redmond"},
-  {id:74,name:"Elizabeth Pinkham",title:"SVP, Marketing & Events",company:"Salesforce",email:"epinkham@salesforce.com",phone:"415-901-7000",sector:"Tech & Telecom",city:"San Francisco"},
-  {id:75,name:"Davida Rochman",title:"Marketing / PR",company:"Shure",email:"Rochman_Davida@shure.com",phone:"",sector:"Tech & Telecom",city:"Niles IL"},
-  {id:76,name:"Andy Allmann",title:"Director, Promotions & Sports Marketing",company:"Southwest Airlines",email:"andy.allmann@wnco.com",phone:"214-792-4000",sector:"Travel",city:"Dallas"},
-  {id:77,name:"Jamie Allison",title:"Director, North America Ford Motorsports",company:"Ford Motor Company",email:"jalliso1@ford.com",phone:"313-322-3000",sector:"Auto",city:"Dearborn"},
-  {id:78,name:"Larry Peck",title:"Experiential Marketing Manager",company:"General Motors",email:"larry.peck@gm.com",phone:"313-556-5000",sector:"Auto",city:"Detroit"},
-  {id:79,name:"Earlean Ward",title:"Director, U.S. Events & Motivation",company:"Avon Products",email:"earlean.ward@avon.com",phone:"212-282-5000",sector:"Beauty",city:"New York"},
-  {id:80,name:"Jennifer Iino-Harvey",title:"Sr. Manager, PR & Promotions",company:"Avon Products",email:"jennifer.iinoharvey@avon.com",phone:"212-282-5000",sector:"Beauty",city:"New York"},
-  {id:81,name:"Pam Alabaster",title:"SVP, Corporate Communications",company:"L'Oreal USA",email:"palabaster@us.loreal.com",phone:"212-818-1500",sector:"Beauty",city:"New York"},
-  {id:82,name:"Vinay Sharma",title:"Director, Marketing",company:"Kraft Foods",email:"vinay.sharma@kraft.com",phone:"847-646-2000",sector:"Food & Bev",city:"Northfield IL"},
-  {id:83,name:"Yolanda Angulo",title:"Director, Multicultural Marketing",company:"Kraft Foods",email:"yolanda.angulo@kraft.com",phone:"973-503-2000",sector:"Food & Bev",city:"Northfield IL"},
-  {id:84,name:"Brenda Zuck",title:"Manager, Global Design – Kids Equities",company:"Colgate-Palmolive",email:"brenda_zuck@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
-  {id:85,name:"Carla Kelly",title:"General Manager, Multicultural Marketing",company:"Colgate-Palmolive",email:"carla_kelly@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
-  {id:86,name:"Sarah Upbin",title:"Brand Manager, Oral Care Multicultural",company:"Colgate-Palmolive",email:"sarah_upbin@colpal.com",phone:"212-310-2000",sector:"Beauty",city:"New York"},
-  {id:87,name:"Joy Herfel",title:"President, Polo Ralph Lauren Menswear",company:"Polo Ralph Lauren",email:"joy.herfel@poloralphlauren.com",phone:"212-318-7000",sector:"Sports & Fashion",city:"New York"},
-  {id:88,name:"Leah Salak",title:"Director, Marketing & Events",company:"Liz Claiborne",email:"leah_salak@liz.com",phone:"212-354-4900",sector:"Sports & Fashion",city:"New York"},
-  {id:89,name:"Anne Keating",title:"SVP, Public Relations & Special Events",company:"Bloomingdale's",email:"anne.keating@bloomingdales.com",phone:"212-705-2000",sector:"Retail",city:"New York"},
-  {id:90,name:"Mallory Andrews",title:"SVP, Marketing & Public Relations",company:"Bergdorf Goodman",email:"mallory_andrews@bergdorfgoodman.com",phone:"212-753-7300",sector:"Retail",city:"New York"},
-  {id:91,name:"Alex Keith",title:"VP, North American Laundry",company:"Procter & Gamble",email:"keith.as@pg.com",phone:"513-983-1100",sector:"Beauty",city:"Cincinnati"},
-  {id:92,name:"David Palmer",title:"Brand Manager, Global Sports Marketing",company:"Procter & Gamble",email:"palmer.dw@pg.com",phone:"513-983-1100",sector:"Sports & Fashion",city:"Cincinnati"},
-  {id:93,name:"Greg Via",title:"Director, Global Sports Marketing",company:"Procter & Gamble / Gillette",email:"via.gl@pg.com",phone:"617-463-3000",sector:"Sports & Fashion",city:"Boston"},
-  {id:94,name:"Maria Campbell",title:"Director, Diversity",company:"S.C. Johnson & Son",email:"mlcampbe@scj.com",phone:"262-260-2000",sector:"Beauty",city:"Racine WI"},
-  {id:95,name:"Jackie Parker",title:"VP, Inclusion, Diversity & Corporate Philanthropy",company:"Newell Rubbermaid",email:"jackie.parker@newellco.com",phone:"770-418-7000",sector:"Retail",city:"Atlanta"},
-  {id:96,name:"Chad Ballantyne",title:"Publicist",company:"Dove / Edelman",email:"Chad.Ballantyne@Edelman.com",phone:"212-704-8174",sector:"Beauty",city:"New York"},
-  {id:97,name:"Annette Reichel",title:"Publicist",company:"Dove / Edelman",email:"annette.reichel@edelman.com",phone:"",sector:"Beauty",city:"New York"},
-  {id:98,name:"Randall Chinchilla",title:"PR",company:"Pantene / P&G",email:"chinchilla.r@pg.com",phone:"",sector:"Beauty",city:"Cincinnati"},
-  {id:99,name:"Jennifer Kacmarek",title:"Marketing",company:"Clairol",email:"jkaczmarek@mahercomm.com",phone:"212-485-6812",sector:"Beauty",city:"New York"},
-  {id:100,name:"Nick Raffaele",title:"SVP, Sports Marketing",company:"Callaway Golf",email:"nick.raffaele@callawaygolf.com",phone:"760-931-1771",sector:"Sports & Fashion",city:"Carlsbad"},
-  {id:101,name:"Matt Hall",title:"Marketing",company:"Hanesbrands",email:"matt.hall@hanesbrands.com",phone:"336-519-3386",sector:"Sports & Fashion",city:"Winston-Salem"},
-  {id:102,name:"John Faulkner",title:"Director, Brand Communications",company:"Campbell Soup Company",email:"john_w_faulkner@campbellsoup.com",phone:"856-342-4800",sector:"Food & Bev",city:"Camden NJ"},
-  {id:103,name:"Pat Simmons",title:"VP, Customer Marketing, Events & NASCAR",company:"General Mills",email:"patrick.simmons@genmills.com",phone:"763-764-7600",sector:"Food & Bev",city:"Minneapolis"},
-  {id:104,name:"Ski Austin",title:"EVP, Events & Attractions",company:"National Basketball Association",email:"saustin@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:105,name:"Stu Jackson",title:"EVP, Basketball Operations",company:"NBA",email:"sjackson@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:106,name:"Jennifer Walker",title:"Manager, Marketing Services",company:"AFLAC",email:"jwalker@aflac.com",phone:"706-323-3431",sector:"Finance",city:"Columbus GA"},
-  {id:107,name:"Dan Fleishman",title:"VP, Sponsorships & Emerging Markets",company:"AFLAC",email:"dfleishman@aflac.com",phone:"706-323-3431",sector:"Finance",city:"Columbus GA"},
-  {id:108,name:"Jamie Woods",title:"Director, Sponsorship Marketing",company:"Advance Auto Parts",email:"jamie.woods@advanceauto.com",phone:"540-362-4911",sector:"Auto",city:"Roanoke VA"},
-  {id:109,name:"Michelle Gallagher",title:"Manager, Corporate Sponsorship",company:"Delta Air Lines",email:"michelle.k.gallagher@delta.com",phone:"404-715-2600",sector:"Travel",city:"Atlanta"},
-  {id:110,name:"Dawn Turner",title:"Global Promotions, Sports & Entertainment Marketing Manager",company:"AMR / American Airlines",email:"dawn.turner@aa.com",phone:"817-963-1234",sector:"Travel",city:"Fort Worth"},
-  {id:111,name:"Jon Harris",title:"SVP, Global Communications",company:"Sara Lee Corporation",email:"jon.harris@saralee.com",phone:"630-598-6000",sector:"Food & Bev",city:"Downers Grove"},
-  {id:112,name:"Lauren Radcliffe",title:"Director, Marketing & Brand Entertainment Sponsorships",company:"Dr Pepper Snapple Group",email:"lauren.radcliffe@dpsg.com",phone:"914-612-4000",sector:"Food & Bev",city:"Rye Brook NY"},
-  {id:113,name:"Steve Piehl",title:"Director, Events & Consumer Initiatives",company:"Harley-Davidson",email:"steve.piehl@harley-davidson.com",phone:"414-342-4680",sector:"Auto",city:"Milwaukee"},
-  {id:114,name:"Mary Kathryn Seipke",title:"Director, Sponsorship & Integrated Marketing",company:"Harpo / Oprah",email:"mkseipke@harpo.com",phone:"312-633-1000",sector:"Media & Entertainment",city:"Chicago"},
-  {id:115,name:"Kara Fox-LaRose",title:"VP, Marketing & Promotions",company:"Mohegan Sun",email:"kfoxlarose@mohegansun.com",phone:"860-862-8000",sector:"Travel",city:"Uncasville CT"},
-  {id:116,name:"Lauren Steel",title:"VP, Corporate Affairs",company:"Coca-Cola Bottling Consolidated",email:"lauren.steele@ccbcc.com",phone:"704-557-4000",sector:"Food & Bev",city:"Charlotte"},
-  {id:117,name:"Traci Bermiss",title:"Marketing",company:"PepsiCo",email:"Traci.J.Bermiss@pepsico.com",phone:"",sector:"Food & Bev",city:"Purchase NY"},
-  {id:118,name:"Brian Perkins",title:"Corporate VP, Corporate Affairs",company:"Johnson & Johnson",email:"bperkins@corus.jnj.com",phone:"732-524-0400",sector:"Beauty",city:"New Brunswick"},
-  {id:119,name:"Vanessa Solomon",title:"President, Multicultural Group",company:"Colomer USA",email:"vanessa.solomon@us.thecolomergroup.com",phone:"904-693-1200",sector:"Beauty",city:"Jacksonville"},
-  {id:120,name:"Shawn Tollerson",title:"VP, Marketing – Multicultural Division",company:"Colomer USA",email:"shawn.tollerson@us.thecolomergroup.com",phone:"904-693-1200",sector:"Beauty",city:"Jacksonville"},
-  {id:121,name:"Andrea Hamilton",title:"PR",company:"Organic Root Stimulator",email:"andrea@10squaredpr.com",phone:"404-447-9894",sector:"Beauty",city:"Atlanta"},
-  {id:122,name:"Angela Watts",title:"PR",company:"Organic Root Stimulator",email:"Angela@awmediagroup.com",phone:"678-637-0982",sector:"Beauty",city:"Atlanta"},
-  {id:123,name:"Michelle Wazlawek",title:"Marketing Manager",company:"Enterprise Rent-A-Car",email:"michelle.s.wazlawek@erac.com",phone:"314-512-5000",sector:"Travel",city:"Saint Louis"},
-  {id:124,name:"Liliahn Johnson",title:"Senior Director, Team Marketing & Business Operations",company:"NBA",email:"ljohnson@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:125,name:"Emilio Collins",title:"SVP, Global Marketing Partnerships",company:"NBA",email:"ecollins@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:126,name:"Chris Granger",title:"EVP, Team Marketing & Business Operations",company:"NBA",email:"cgranger@nba.com",phone:"212-407-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:127,name:"Seth Winter",title:"SVP, Sales & Marketing – Sports & Olympics",company:"NBCUniversal",email:"seth.winter@nbcuni.com",phone:"212-664-4444",sector:"Media & Entertainment",city:"New York"},
-  {id:128,name:"Gary Zenkel",title:"President, NBC Olympics",company:"NBCUniversal",email:"gary.zenkel@nbcuni.com",phone:"212-664-4444",sector:"Media & Entertainment",city:"New York"},
-  {id:129,name:"Will Funk",title:"SVP, Sports Sponsorships",company:"Turner Broadcasting",email:"will.funk@turner.com",phone:"212-275-6000",sector:"Media & Entertainment",city:"New York"},
-  {id:130,name:"David Levy",title:"President, Turner Sales, Distribution & Sports",company:"Turner Broadcasting",email:"david.levy@turner.com",phone:"212-275-6000",sector:"Media & Entertainment",city:"New York"},
-  {id:131,name:"Pam Kaufman",title:"Chief Marketing Officer, Nickelodeon",company:"Nickelodeon",email:"pam.kaufman@nick.com",phone:"212-258-7500",sector:"Media & Entertainment",city:"New York"},
-  {id:132,name:"Keith Dawkins",title:"GM & SVP, Nickelodeon Tunes",company:"Nickelodeon",email:"keith.dawkins@nick.com",phone:"212-258-7500",sector:"Media & Entertainment",city:"New York"},
-  {id:133,name:"Paxton Baker",title:"President, BET Event Productions",company:"BET Networks",email:"paxton.baker@bet.net",phone:"202-608-2000",sector:"Media & Entertainment",city:"Washington DC"},
-  {id:134,name:"Jeanine Liburd",title:"EVP, Communications & Public Affairs",company:"BET Networks",email:"jeanine.liburd@bet.net",phone:"202-608-2000",sector:"Media & Entertainment",city:"Washington DC"},
-  {id:135,name:"Karin Strelec",title:"Director, Live Events Marketing",company:"World Wrestling Entertainment",email:"karin.strelec@wwecorp.com",phone:"203-352-8600",sector:"Media & Entertainment",city:"Stamford CT"},
-  {id:136,name:"Susan Jurevics",title:"SVP, Global Retail & Brand Marketing",company:"Sony Corporation of America",email:"susan.jurevics@us.sony.com",phone:"212-833-6800",sector:"Media & Entertainment",city:"New York"},
-  {id:137,name:"Dylan Casey",title:"Brand & Entertainment Marketing Director",company:"Google",email:"dcasey@google.com",phone:"650-253-0000",sector:"Tech & Telecom",city:"Mountain View"},
-  {id:138,name:"Brian Diamond",title:"SVP, Specials, Sports & Documentaries",company:"MTV Networks",email:"brian.diamond@mtv.com",phone:"212-767-4001",sector:"Media & Entertainment",city:"New York"},
-  {id:139,name:"Leslie Leventman",title:"EVP, Creative Services & Special Events",company:"MTV Networks",email:"leslie.leventman@mtv.com",phone:"212-258-8000",sector:"Media & Entertainment",city:"New York"},
-  {id:140,name:"Patrick Angel",title:"National Event Logistics Manager",company:"Red Bull North America",email:"patrick.angel@us.redbull.com",phone:"310-393-4647",sector:"Food & Bev",city:"Santa Monica"},
-  {id:141,name:"Mike Poznansky",title:"National Collegiate Marketing Manager",company:"Red Bull North America",email:"mike.poznansky@us.redbull.com",phone:"310-393-4647",sector:"Food & Bev",city:"Santa Monica"},
-  {id:142,name:"Rodnell Workman",title:"VP, Strategic Partnerships",company:"MSG Networks",email:"rodnell.workman@thegarden.com",phone:"212-465-6000",sector:"Media & Entertainment",city:"New York"},
-  {id:143,name:"Joel Fisher",title:"EVP, Madison Square Garden Sports",company:"MSG Networks",email:"joel.fisher@thegarden.com",phone:"212-465-6000",sector:"Media & Entertainment",city:"New York"},
-];
-
-let currentView = 'grid';
-let currentSector = 'All';
-
-function getInitials(name) {
-  return name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-}
-
-function getSectorConfig(sector) {
-  return SECTOR_CONFIG[sector] || { color:'#888', bg:'rgba(136,136,136,0.1)' };
-}
-
-function sectorCounts() {
-  const m = {};
-  ALL_CONTACTS.forEach(c => { m[c.sector] = (m[c.sector]||0)+1; });
-  return m;
-}
-
-function getFiltered() {
-  const search = document.getElementById('search').value.toLowerCase().trim();
-  const sort = document.querySelector('.sort-select').value;
-  let c = ALL_CONTACTS.slice();
-  if (currentSector !== 'All') c = c.filter(x => x.sector === currentSector);
-  if (search) c = c.filter(x =>
-    x.name.toLowerCase().includes(search) ||
-    x.company.toLowerCase().includes(search) ||
-    x.title.toLowerCase().includes(search) ||
-    x.sector.toLowerCase().includes(search) ||
-    x.city.toLowerCase().includes(search)
-  );
-  c.sort((a,b) => a[sort].localeCompare(b[sort]));
-  return c;
-}
-
-function renderStats() {
-  const sc = sectorCounts();
-  const withEmail = ALL_CONTACTS.filter(c=>c.email).length;
-  const topSector = Object.entries(sc).sort((a,b)=>b[1]-a[1])[0];
-  document.getElementById('stats-row').innerHTML = [
-    {label:'Total contacts', value:'143', sub:'in your network'},
-    {label:'Sectors', value:Object.keys(sc).length, sub:'industries covered'},
-    {label:'Have emails', value:withEmail, sub:`${Math.round(withEmail/143*100)}% verified`},
-    {label:'Top sector', value:topSector[0].split(' ')[0], sub:`${topSector[1]} contacts`},
-    {label:'VP level+', value:ALL_CONTACTS.filter(c=>/VP|SVP|EVP|President|CMO|Chief/.test(c.title)).length, sub:'senior decision-makers'},
-  ].map(s => `
-    <div class="stat-card">
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value">${s.value}</div>
-      <div class="stat-sub">${s.sub}</div>
-    </div>
-  `).join('');
-}
-
-function renderFilters() {
-  const sc = sectorCounts();
-  const sectors = ['All', ...Object.keys(SECTOR_CONFIG)];
-  document.getElementById('filters').innerHTML = sectors.map(s => {
-    const active = s === currentSector;
-    const cfg = SECTOR_CONFIG[s];
-    const count = s === 'All' ? ALL_CONTACTS.length : (sc[s]||0);
-    const style = active && cfg ? `background:${cfg.bg};border-color:${cfg.color};color:${cfg.color};` : '';
-    return `<button class="filter-btn${active?' active':''}" onclick="setSector('${s}')" style="${style}">${s}${s!=='All'?` (${count})`:''}</button>`;
-  }).join('');
-}
-
-function renderBreakdown() {
-  const sc = sectorCounts();
-  document.getElementById('breakdown-grid').innerHTML = Object.entries(sc)
-    .sort((a,b)=>b[1]-a[1])
-    .map(([sector, count]) => {
-      const cfg = getSectorConfig(sector);
-      return `
-        <div class="breakdown-card" onclick="setSector('${sector}')">
-          <span class="breakdown-name">${sector}</span>
-          <span class="breakdown-count" style="color:${cfg.color}">${count}</span>
-        </div>`;
-    }).join('');
-}
-
-function renderContacts() {
-  const fc = getFiltered();
-  const info = document.getElementById('results-info');
-  info.innerHTML = `Showing <span>${fc.length}</span> of <span>143</span> contacts${currentSector!=='All'?' — filtered by <span>'+currentSector+'</span>':''}`;
-
-  if (fc.length === 0) {
-    document.getElementById('contacts-container').innerHTML = `<div class="empty"><h3>No contacts found</h3><p>Try adjusting your search or filter</p></div>`;
-    return;
-  }
-
-  if (currentView === 'grid') {
-    document.getElementById('contacts-container').innerHTML = `<div class="grid">${fc.map(c => {
-      const cfg = getSectorConfig(c.sector);
-      const initials = getInitials(c.name);
-      return `
-        <div class="contact-card" onclick="openModal(${c.id})" style="border-left-color:${cfg.color}">
-          <div class="card-header">
-            <div class="avatar" style="background:${cfg.bg};color:${cfg.color}">${initials}</div>
-            <div>
-              <div class="card-name">${c.name}</div>
-              <div class="card-company">${c.company}</div>
-            </div>
-          </div>
-          <div class="card-title">${c.title}</div>
-          <div class="card-footer">
-            <span class="sector-badge" style="background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.color}44">${c.sector}</span>
-            <span class="card-city">${c.city}</span>
-          </div>
-          ${c.email ? `<div class="card-email-indicator" style="background:${cfg.color}" title="Has email"></div>` : ''}
-        </div>`;
-    }).join('')}</div>`;
-  } else {
-    document.getElementById('contacts-container').innerHTML = `
-      <div style="display:grid;grid-template-columns:40px 1fr 1fr 140px 100px;gap:14px;padding:8px 16px;font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">
-        <span></span><span>Name</span><span>Title</span><span>Sector</span><span>City</span>
-      </div>
-      <div class="list">${fc.map(c => {
-        const cfg = getSectorConfig(c.sector);
-        return `
-          <div class="list-row" onclick="openModal(${c.id})">
-            <div class="avatar" style="width:32px;height:32px;font-size:11px;background:${cfg.bg};color:${cfg.color}">${getInitials(c.name)}</div>
-            <div><div class="list-name">${c.name}</div><div class="list-company">${c.company}</div></div>
-            <div class="list-title">${c.title}</div>
-            <span class="sector-badge" style="background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.color}44;padding:4px 10px;border-radius:20px;font-size:10px">${c.sector}</span>
-            <span class="list-city">${c.city}</span>
-          </div>`;
-      }).join('')}</div>`;
-  }
-}
-
-function openModal(id) {
-  const c = ALL_CONTACTS.find(x=>x.id===id);
-  if (!c) return;
-  const cfg = getSectorConfig(c.sector);
-  document.getElementById('modal-content').innerHTML = `
-    <div class="modal-top" style="background:${cfg.color}"></div>
-    <div class="modal-body">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <div class="modal-avatar-wrap">
-        <div class="modal-avatar" style="background:${cfg.bg};color:${cfg.color}">${getInitials(c.name)}</div>
-        <div>
-          <div class="modal-name">${c.name}</div>
-          <div class="modal-title">${c.title}</div>
+  <main class="main">
+    <div class="masthead">
+      <div class="masthead-meta">
+        <div class="left">
+          <span>Vol. IV · No. 3453</span>
+          <span>Akira Digital</span>
+        </div>
+        <div class="right">
+          <span id="dateBadge">Aug 16, 2026</span>
         </div>
       </div>
-      <div class="modal-fields">
-        ${[['Company',c.company],['Sector',c.sector],['Email',c.email||'—'],['Phone',c.phone||'—'],['City',c.city||'—']].map(([l,v])=>`
-          <div class="modal-field">
-            <span class="modal-field-label">${l}</span>
-            <span class="modal-field-value" style="${l==='Email'&&v!=='—'?'color:'+cfg.color:''}">${v}</span>
-          </div>`).join('')}
-      </div>
-      <div class="modal-actions">
-        ${c.email?`<button class="modal-btn primary" onclick="window.location.href='mailto:${c.email}'">Email</button>`:''}
-        <button class="modal-btn" onclick="window.open('https://linkedin.com/search/results/people/?keywords='+encodeURIComponent('${c.name} ${c.company}'))">LinkedIn</button>
-        <button class="modal-btn" onclick="copyContact(${c.id})">Copy Info</button>
-      </div>
-    </div>`;
-  document.getElementById('modal').classList.add('open');
-}
+      <button class="mobile-menu" id="mobileMenu">☰ Filters</button>
+      <h1 class="masthead-title">The <em>Rolodex</em></h1>
+      <p class="masthead-sub">Every decision-maker you'd want on your call sheet — filtered, verified, ready.</p>
+    </div>
 
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal')) {
-    document.getElementById('modal').classList.remove('open');
+    <div class="kpi-strip">
+      <div class="kpi accent">
+        <div class="kpi-label">Total Contacts</div>
+        <div class="kpi-value">3,453</div>
+      </div>
+      <div class="kpi hunter">
+        <div class="kpi-label">Verticals</div>
+        <div class="kpi-value">18</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Sub-Sectors</div>
+        <div class="kpi-value">235</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">C-Suite / VP</div>
+        <div class="kpi-value" id="kpiSenior">1,138</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">With Phone</div>
+        <div class="kpi-value" id="kpiPhone">97</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Shortlisted</div>
+        <div class="kpi-value" id="kpiShortlist">0</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="searchbox">
+        <span class="icon">⌕</span>
+        <input id="search" type="text" placeholder="Search name, company, title, email — try &quot;nike&quot; or &quot;vp partnerships&quot;" />
+        <span class="kbd">/</span>
+      </div>
+      <div class="tool">
+        <span>Sort</span>
+        <select id="sortSel">
+          <option value="seniority">Seniority · Highest</option>
+          <option value="name">Name · A→Z</option>
+          <option value="company">Company · A→Z</option>
+          <option value="sector">Sector · A→Z</option>
+        </select>
+      </div>
+      <div class="view-group">
+        <button class="tool" id="viewTable" title="Table view">☰ Table</button>
+        <button class="tool on" id="viewCards" title="Card view">▦ Cards</button>
+      </div>
+      <button class="tool primary" id="exportBtn">Export CSV</button>
+    </div>
+
+    <div class="active-filters" id="activeFilters">
+      <span class="results-count" id="resultsCount">Loading…</span>
+    </div>
+
+    <div class="bulk-bar" id="bulkBar">
+      <span class="count" id="bulkCount">0 selected</span>
+      <button class="link" id="bulkCopy">Copy emails</button>
+      <button class="link" id="bulkStar">Add to shortlist</button>
+      <button class="link" id="bulkExport">Export selected</button>
+      <span class="spacer"></span>
+      <button class="link" id="bulkClear">Clear selection</button>
+    </div>
+
+    <section class="content">
+      <div id="viewport"></div>
+      <div class="pagination" id="pagination"></div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <button class="drawer-close" id="drawerClose" aria-label="Close">✕</button>
+    <div class="drawer-tab" id="dTab">— · —</div>
+    <div class="drawer-name" id="dName">—</div>
+    <div class="drawer-title" id="dTitle">—</div>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <div class="field-label">Company</div>
+      <div class="field-value" id="dCo">—</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Sub-Sector</div>
+      <div class="field-value" id="dSector">—</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Email</div>
+      <div class="field-value mono"><a id="dEmailLink" href="#"></a></div>
+    </div>
+    <div class="field" id="dPhoneField">
+      <div class="field-label">Phone</div>
+      <div class="field-value mono" id="dPhone">—</div>
+    </div>
+    <div class="field" id="dLiField">
+      <div class="field-label">LinkedIn</div>
+      <div class="field-value"><a id="dLi" href="#" target="_blank" rel="noopener">Open profile ↗</a></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Source</div>
+      <div class="field-value" id="dSrc">—</div>
+    </div>
+    <div class="drawer-actions">
+      <button class="btn primary" id="dCopy">Copy email</button>
+      <button class="btn" id="dMailto">Compose</button>
+      <button class="btn" id="dStar">☆ Star</button>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+(async () => {
+async function loadPayload() {
+  // Contact data lives in data.json alongside this file (committed to the repo).
+  const r = await fetch('./data.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error('Failed to load contact data (' + r.status + ')');
+  return await r.json();
+}
+let PAYLOAD;
+try {
+  PAYLOAD = await loadPayload();
+} catch (err) {
+  const el = document.getElementById('resultsCount');
+  if (el) el.textContent = 'Could not load contacts — ' + err.message;
+  throw err;
+}
+const CONTACTS = PAYLOAD.contacts;
+
+// ---------- State ----------
+const STATE = {
+  activeMetas: new Set(),
+  activeSectors: new Set(),
+  activeSen: new Set(),
+  search: "",
+  sort: "seniority",
+  view: "cards",
+  showShortlistOnly: false,
+  showPhoneOnly: false,
+  page: 0,
+  perPage: 60,
+  selected: new Set(),   // emails
+  expanded: new Set(),   // meta rows
+};
+
+// Shortlist persists across sessions
+function loadShortlist() {
+  try {
+    const raw = localStorage.getItem('hq_shortlist');
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch { return new Set(); }
+}
+function saveShortlist() {
+  localStorage.setItem('hq_shortlist', JSON.stringify([...STATE.shortlist]));
+}
+STATE.shortlist = loadShortlist();
+
+// ---------- Helpers ----------
+const SEN_ORDER = { C: 0, V: 1, H: 2, D: 3, M: 4, O: 5 };
+const esc = s => (s || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function normalize(s) { return (s || "").toLowerCase(); }
+
+function match(c) {
+  if (STATE.showShortlistOnly && !STATE.shortlist.has(c.e)) return false;
+  if (STATE.showPhoneOnly && !c.p) return false;
+  if (STATE.activeMetas.size && !STATE.activeMetas.has(c.m)) return false;
+  if (STATE.activeSectors.size && !STATE.activeSectors.has(c.s)) return false;
+  if (STATE.activeSen.size && !STATE.activeSen.has(c.r)) return false;
+  if (STATE.search) {
+    const q = STATE.search.trim().toLowerCase();
+    // Field-scoped queries: title:vp, company:nike, @domain
+    if (q.startsWith("title:")) {
+      return normalize(c.t).includes(q.slice(6));
+    }
+    if (q.startsWith("company:") || q.startsWith("co:")) {
+      const v = q.slice(q.indexOf(':') + 1);
+      return normalize(c.c).includes(v);
+    }
+    if (q.startsWith("@")) {
+      return normalize(c.e).includes(q.slice(1));
+    }
+    const hay = normalize(c.n + " " + c.t + " " + c.c + " " + c.e + " " + c.s);
+    return hay.includes(q);
   }
+  return true;
 }
 
-function copyContact(id) {
-  const c = ALL_CONTACTS.find(x=>x.id===id);
-  const text = `${c.name}\n${c.title}\n${c.company}\n${c.email||'No email'}\n${c.phone||'No phone'}\n${c.city}`;
-  navigator.clipboard.writeText(text).then(() => alert('Contact info copied!'));
+function sortRows(rows) {
+  const s = STATE.sort;
+  const cmp = {
+    seniority: (a, b) => SEN_ORDER[a.r] - SEN_ORDER[b.r] || a.n.localeCompare(b.n),
+    name: (a, b) => a.n.localeCompare(b.n),
+    company: (a, b) => (a.c || "").localeCompare(b.c || "") || a.n.localeCompare(b.n),
+    sector: (a, b) => (a.s || "").localeCompare(b.s || "") || a.n.localeCompare(b.n),
+  };
+  return rows.slice().sort(cmp[s] || cmp.name);
 }
 
-function setSector(s) {
-  currentSector = s;
-  renderFilters();
-  renderContacts();
+// ---------- Sidebar renders ----------
+function renderSidebar() {
+  const ml = document.getElementById('metaList');
+  ml.innerHTML = "";
+  PAYLOAD.meta_order.forEach(meta => {
+    const count = PAYLOAD.meta_counts[meta] || 0;
+    if (!count) return;
+    const isOn = STATE.activeMetas.has(meta);
+    const isExpanded = STATE.expanded.has(meta);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = `
+      <button class="meta-row ${isOn ? 'on':''} ${isExpanded ? 'expanded':''}" data-meta="${esc(meta)}">
+        <span class="expand">▶</span>
+        <span class="name">${esc(meta)}</span>
+        <span class="count">${count}</span>
+      </button>
+      <div class="sector-list ${isExpanded ? 'open':''}">
+        ${(PAYLOAD.sectors_by_meta[meta] || []).map(s => `
+          <button class="sector-row ${STATE.activeSectors.has(s.name) ? 'on':''}" data-sector="${esc(s.name)}">
+            <span class="sname">${esc(s.name)}</span>
+            <span class="scount">${s.n}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    ml.appendChild(wrapper);
+  });
+
+  const sl = document.getElementById('senList');
+  const senOrder = ['C', 'V', 'H', 'D', 'M', 'O'];
+  sl.innerHTML = senOrder.map(k => {
+    const count = PAYLOAD.sen_counts[k] || 0;
+    if (!count) return '';
+    const isOn = STATE.activeSen.has(k);
+    return `<button class="side-btn ${isOn ? 'on':''}" data-sen="${k}">
+      <span class="dot dot-${k}"></span>
+      <span>${esc(PAYLOAD.sen_label[k])}</span>
+      <span class="scount">${count}</span>
+    </button>`;
+  }).join('');
+
+  // Shortlist counter
+  document.getElementById('shortlistCount').textContent = STATE.shortlist.size;
+  document.getElementById('kpiShortlist').textContent = STATE.shortlist.size;
+  document.getElementById('shortlistToggle').classList.toggle('on', STATE.showShortlistOnly);
+  document.getElementById('phoneToggle').classList.toggle('on', STATE.showPhoneOnly);
 }
 
-function setView(v, btn) {
-  currentView = v;
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderContacts();
+// Seniority KPI (top strip)
+document.getElementById('kpiSenior').textContent =
+  ((PAYLOAD.sen_counts.C || 0) + (PAYLOAD.sen_counts.V || 0)).toLocaleString();
+
+// ---------- Filter chip rendering (top bar) ----------
+function renderActiveFilters(totalFiltered) {
+  const bar = document.getElementById('activeFilters');
+  const bits = [];
+  STATE.activeMetas.forEach(m => bits.push(`<span class="pill">${esc(m)} <button class="x" data-clear-meta="${esc(m)}">×</button></span>`));
+  STATE.activeSectors.forEach(s => bits.push(`<span class="pill">${esc(s)} <button class="x" data-clear-sector="${esc(s)}">×</button></span>`));
+  STATE.activeSen.forEach(k => bits.push(`<span class="pill sen"><span class="dot dot-${k}" style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;"></span>${esc(PAYLOAD.sen_label[k])} <button class="x" data-clear-sen="${k}">×</button></span>`));
+  if (STATE.showShortlistOnly) bits.push(`<span class="pill" style="background:rgba(184,115,51,0.1);border-color:var(--copper);color:var(--copper-ink);">★ Shortlist <button class="x" data-clear-shortlist="1">×</button></span>`);
+  if (STATE.showPhoneOnly) bits.push(`<span class="pill" style="background:rgba(26,74,46,0.08);border-color:var(--hunter);color:var(--hunter);">☎ Has phone <button class="x" data-clear-phone="1">×</button></span>`);
+  if (STATE.search) bits.push(`<span class="pill">"${esc(STATE.search)}" <button class="x" data-clear-search="1">×</button></span>`);
+  bar.innerHTML = bits.join('') + `<span class="results-count" id="resultsCount">${totalFiltered.toLocaleString()} of ${PAYLOAD.total.toLocaleString()} contacts</span>`;
 }
 
-function applyFilters() { renderContacts(); }
+// ---------- Main render ----------
+function render() {
+  const filtered = sortRows(CONTACTS.filter(match));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / STATE.perPage));
+  if (STATE.page >= totalPages) STATE.page = 0;
+  const page = filtered.slice(STATE.page * STATE.perPage, (STATE.page + 1) * STATE.perPage);
 
-function exportCSV() {
-  const fc = getFiltered();
-  const rows = [['Name','Title','Company','Email','Phone','Sector','City'],...fc.map(c=>[c.name,c.title,c.company,c.email,c.phone,c.sector,c.city])];
-  const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'sponsorship-contacts.csv';
-  a.click();
+  renderActiveFilters(filtered.length);
+  renderSidebar();
+
+  const vp = document.getElementById('viewport');
+  if (!filtered.length) {
+    vp.innerHTML = `<div class="empty"><h3>No matches</h3><p>Try loosening a filter or clearing the search.</p></div>`;
+  } else if (STATE.view === 'table') {
+    vp.innerHTML = renderTable(page);
+  } else {
+    vp.innerHTML = renderCards(page);
+  }
+
+  renderPagination(filtered.length, totalPages);
+  renderBulkBar();
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function renderCards(rows) {
+  return `<div class="cards">${rows.map(cardHtml).join('')}</div>`;
+}
 
-renderStats();
-renderFilters();
-renderBreakdown();
-renderContacts();
+function cardHtml(c) {
+  const starred = STATE.shortlist.has(c.e);
+  return `<article class="card ${starred ? 'starred':''}" data-email="${esc(c.e)}">
+    <div class="card-actions">
+      <button class="icon-btn star ${starred ? 'on':''}" data-star="${esc(c.e)}" aria-label="${starred ? 'Remove from shortlist':'Add to shortlist'}">${starred ? '★':'☆'}</button>
+      ${c.i ? `<a class="icon-btn li" href="${esc(c.i)}" target="_blank" rel="noopener" aria-label="LinkedIn" onclick="event.stopPropagation()">in</a>` : ''}
+    </div>
+    <div class="tab ${esc(c.r)}">${esc(PAYLOAD.sen_label[c.r] || c.r)}</div>
+    <div class="card-name">${esc(c.n)}</div>
+    <div class="card-title">${esc(c.t)}</div>
+    <div class="card-co">${esc(c.c)}</div>
+    <div class="card-sector">${esc(c.s)}</div>
+    <div class="card-contact">
+      <div class="card-email" title="${esc(c.e)}">${esc(c.e)}</div>
+      ${c.p ? `<div class="card-phone" title="Phone">${esc(c.p)}</div>` : ''}
+    </div>
+  </article>`;
+}
+
+function renderTable(rows) {
+  const arrow = key => STATE.sort === key ? '<span class="arrow">↑</span>' : '<span class="arrow">↕</span>';
+  const sortedClass = key => STATE.sort === key ? 'sorted' : '';
+  return `<div class="tbl-wrap"><table class="contacts">
+    <thead>
+      <tr>
+        <th class="chk"><input type="checkbox" id="chkAll" /></th>
+        <th class="sortable ${sortedClass('name')}" data-sort="name">Name ${arrow('name')}</th>
+        <th>Title</th>
+        <th class="sortable ${sortedClass('company')}" data-sort="company">Company ${arrow('company')}</th>
+        <th class="sortable ${sortedClass('sector')}" data-sort="sector">Sector ${arrow('sector')}</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>${rows.map(rowHtml).join('')}</tbody>
+  </table></div>`;
+}
+
+function rowHtml(c) {
+  const starred = STATE.shortlist.has(c.e);
+  const selected = STATE.selected.has(c.e);
+  return `<tr data-email="${esc(c.e)}" class="${starred ? 'starred':''} ${selected ? 'selected':''}">
+    <td class="chk"><input type="checkbox" data-sel="${esc(c.e)}" ${selected?'checked':''} /></td>
+    <td class="name-cell"><span class="sen-dot dot-${c.r}"></span>${esc(c.n)}</td>
+    <td class="title-cell">${esc(c.t)}</td>
+    <td class="co-cell">${esc(c.c)}</td>
+    <td class="sector-cell"><span class="meta">${esc(c.m)}</span><br>${esc(c.s)}</td>
+    <td class="email-cell"><a href="mailto:${esc(c.e)}">${esc(c.e)}</a></td>
+    <td class="phone-cell">${c.p ? `<a href="tel:${esc(c.p)}">${esc(c.p)}</a>` : '<span class="phone-dash">—</span>'}</td>
+    <td class="actions">
+      <button class="icon-btn star ${starred?'on':''}" data-star="${esc(c.e)}" aria-label="${starred?'Unstar':'Star'}">${starred?'★':'☆'}</button>
+      <button class="icon-btn" data-copy="${esc(c.e)}" aria-label="Copy email">⧉</button>
+      ${c.i ? `<a class="icon-btn li" href="${esc(c.i)}" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>` : ''}
+    </td>
+  </tr>`;
+}
+
+function renderPagination(total, totalPages) {
+  const p = document.getElementById('pagination');
+  if (totalPages <= 1) { p.innerHTML = ''; return; }
+  const from = STATE.page * STATE.perPage + 1;
+  const to = Math.min((STATE.page + 1) * STATE.perPage, total);
+  p.innerHTML = `
+    <button class="page-btn" id="pgFirst" ${STATE.page === 0 ? 'disabled':''}>‹‹</button>
+    <button class="page-btn" id="pgPrev" ${STATE.page === 0 ? 'disabled':''}>Prev</button>
+    <span class="page-info">${from.toLocaleString()}–${to.toLocaleString()} of ${total.toLocaleString()}</span>
+    <button class="page-btn" id="pgNext" ${STATE.page >= totalPages - 1 ? 'disabled':''}>Next</button>
+    <button class="page-btn" id="pgLast" ${STATE.page >= totalPages - 1 ? 'disabled':''}>››</button>`;
+}
+
+function renderBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  const n = STATE.selected.size;
+  bar.classList.toggle('on', n > 0);
+  document.getElementById('bulkCount').textContent = `${n.toLocaleString()} selected`;
+}
+
+// ---------- Event delegation ----------
+document.addEventListener('click', e => {
+  // Sidebar meta rows
+  const metaRow = e.target.closest('.meta-row');
+  if (metaRow) {
+    const meta = metaRow.dataset.meta;
+    if (e.target.closest('.expand') || e.altKey) {
+      // Toggle expand only
+      STATE.expanded.has(meta) ? STATE.expanded.delete(meta) : STATE.expanded.add(meta);
+    } else {
+      // Toggle filter + auto-expand
+      if (STATE.activeMetas.has(meta)) {
+        STATE.activeMetas.delete(meta);
+        // Also clear any active sub-sectors in this meta
+        (PAYLOAD.sectors_by_meta[meta] || []).forEach(s => STATE.activeSectors.delete(s.name));
+      } else {
+        STATE.activeMetas.add(meta);
+        STATE.expanded.add(meta);
+      }
+      STATE.page = 0;
+    }
+    render(); return;
+  }
+  const secRow = e.target.closest('.sector-row');
+  if (secRow) {
+    const sec = secRow.dataset.sector;
+    STATE.activeSectors.has(sec) ? STATE.activeSectors.delete(sec) : STATE.activeSectors.add(sec);
+    STATE.page = 0;
+    render(); return;
+  }
+  const senRow = e.target.closest('[data-sen]');
+  if (senRow) {
+    const k = senRow.dataset.sen;
+    STATE.activeSen.has(k) ? STATE.activeSen.delete(k) : STATE.activeSen.add(k);
+    STATE.page = 0;
+    render(); return;
+  }
+
+  // Active-filter pills
+  if (e.target.dataset.clearMeta) { STATE.activeMetas.delete(e.target.dataset.clearMeta); STATE.page = 0; render(); return; }
+  if (e.target.dataset.clearSector) { STATE.activeSectors.delete(e.target.dataset.clearSector); STATE.page = 0; render(); return; }
+  if (e.target.dataset.clearSen) { STATE.activeSen.delete(e.target.dataset.clearSen); STATE.page = 0; render(); return; }
+  if (e.target.dataset.clearShortlist) { STATE.showShortlistOnly = false; STATE.page = 0; render(); return; }
+  if (e.target.dataset.clearPhone) { STATE.showPhoneOnly = false; STATE.page = 0; render(); return; }
+  if (e.target.dataset.clearSearch) { STATE.search = ""; document.getElementById('search').value = ""; STATE.page = 0; render(); return; }
+
+  // Star toggles
+  const starBtn = e.target.closest('[data-star]');
+  if (starBtn) {
+    e.stopPropagation();
+    const em = starBtn.dataset.star;
+    STATE.shortlist.has(em) ? STATE.shortlist.delete(em) : STATE.shortlist.add(em);
+    saveShortlist();
+    render();
+    return;
+  }
+  // Copy email
+  const copyBtn = e.target.closest('[data-copy]');
+  if (copyBtn) {
+    e.stopPropagation();
+    copyText(copyBtn.dataset.copy);
+    return;
+  }
+  // Row/card click → open drawer
+  const row = e.target.closest('tr[data-email], article[data-email]');
+  if (row && !e.target.closest('input, a, button')) {
+    openDrawer(row.dataset.email);
+    return;
+  }
+  // Sort headers
+  const sortTh = e.target.closest('th[data-sort]');
+  if (sortTh) {
+    STATE.sort = sortTh.dataset.sort;
+    document.getElementById('sortSel').value = STATE.sort;
+    render();
+    return;
+  }
+  // Pagination
+  if (e.target.id === 'pgPrev') { STATE.page = Math.max(0, STATE.page - 1); render(); return; }
+  if (e.target.id === 'pgNext') { STATE.page += 1; render(); return; }
+  if (e.target.id === 'pgFirst') { STATE.page = 0; render(); return; }
+  if (e.target.id === 'pgLast') {
+    const total = CONTACTS.filter(match).length;
+    STATE.page = Math.max(0, Math.ceil(total / STATE.perPage) - 1);
+    render(); return;
+  }
+});
+
+// Checkbox delegation
+document.addEventListener('change', e => {
+  if (e.target.id === 'chkAll') {
+    // Select/deselect currently visible rows
+    const visible = document.querySelectorAll('input[data-sel]');
+    if (e.target.checked) visible.forEach(cb => STATE.selected.add(cb.dataset.sel));
+    else visible.forEach(cb => STATE.selected.delete(cb.dataset.sel));
+    render();
+    return;
+  }
+  if (e.target.dataset.sel) {
+    const em = e.target.dataset.sel;
+    e.target.checked ? STATE.selected.add(em) : STATE.selected.delete(em);
+    document.querySelector(`tr[data-email="${CSS.escape(em)}"]`)?.classList.toggle('selected', e.target.checked);
+    renderBulkBar();
+  }
+});
+
+// Search
+const searchInput = document.getElementById('search');
+let searchT;
+searchInput.addEventListener('input', e => {
+  clearTimeout(searchT);
+  searchT = setTimeout(() => { STATE.search = e.target.value; STATE.page = 0; render(); }, 120);
+});
+// Keyboard: "/" focuses search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape') {
+    if (document.getElementById('drawer').classList.contains('on')) closeDrawer();
+  }
+});
+
+// Sort dropdown
+document.getElementById('sortSel').addEventListener('change', e => {
+  STATE.sort = e.target.value;
+  render();
+});
+
+// View toggles
+document.getElementById('viewTable').addEventListener('click', () => {
+  STATE.view = 'table';
+  document.getElementById('viewTable').classList.add('on');
+  document.getElementById('viewCards').classList.remove('on');
+  render();
+});
+document.getElementById('viewCards').addEventListener('click', () => {
+  STATE.view = 'cards';
+  document.getElementById('viewCards').classList.add('on');
+  document.getElementById('viewTable').classList.remove('on');
+  render();
+});
+
+// Shortlist toggle
+document.getElementById('shortlistToggle').addEventListener('click', () => {
+  STATE.showShortlistOnly = !STATE.showShortlistOnly;
+  STATE.page = 0;
+  render();
+});
+// Phone-only toggle
+document.getElementById('phoneToggle').addEventListener('click', () => {
+  STATE.showPhoneOnly = !STATE.showPhoneOnly;
+  STATE.page = 0;
+  render();
+});
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  STATE.activeMetas.clear();
+  STATE.activeSectors.clear();
+  STATE.activeSen.clear();
+  STATE.showShortlistOnly = false;
+  STATE.showPhoneOnly = false;
+  STATE.search = "";
+  document.getElementById('search').value = "";
+  STATE.page = 0;
+  render();
+});
+
+// Mobile menu
+document.getElementById('mobileMenu').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('scrim').classList.add('on');
+});
+document.getElementById('scrim').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('scrim').classList.remove('on');
+});
+
+// Export
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = sortRows(CONTACTS.filter(match));
+  exportRows(rows, 'sponsorship_hq_filtered');
+});
+
+// Bulk actions
+document.getElementById('bulkCopy').addEventListener('click', () => {
+  const emails = [...STATE.selected].join(', ');
+  copyText(emails, `${STATE.selected.size} emails copied`);
+});
+document.getElementById('bulkStar').addEventListener('click', () => {
+  STATE.selected.forEach(em => STATE.shortlist.add(em));
+  saveShortlist();
+  toast(`${STATE.selected.size} added to shortlist`);
+  render();
+});
+document.getElementById('bulkExport').addEventListener('click', () => {
+  const rows = CONTACTS.filter(c => STATE.selected.has(c.e));
+  exportRows(rows, 'sponsorship_hq_selected');
+});
+document.getElementById('bulkClear').addEventListener('click', () => {
+  STATE.selected.clear();
+  render();
+});
+
+function exportRows(rows, base) {
+  const hdr = ["First","Last","Name","Title","Company","Sub-Sector","Vertical","Seniority","Email","Phone","LinkedIn","Source"];
+  const esc2 = v => `"${String(v || "").replace(/"/g, '""')}"`;
+  const lines = [hdr.join(",")];
+  rows.forEach(c => lines.push([
+    c.f, c.l, c.n, c.t, c.c, c.s, c.m, PAYLOAD.sen_label[c.r], c.e, c.p, c.i, c.src
+  ].map(esc2).join(",")));
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${base}_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast(`Exported ${rows.length.toLocaleString()} contacts`);
+}
+
+// ---------- Drawer ----------
+function openDrawer(email) {
+  const c = CONTACTS.find(x => x.e === email);
+  if (!c) return;
+  document.getElementById('dTab').textContent = `${PAYLOAD.sen_label[c.r] || '—'} · ${c.m}`;
+  document.getElementById('dName').textContent = c.n;
+  document.getElementById('dTitle').textContent = c.t;
+  document.getElementById('dCo').textContent = c.c;
+  document.getElementById('dSector').textContent = c.s;
+  const emailLink = document.getElementById('dEmailLink');
+  emailLink.textContent = c.e;
+  emailLink.href = `mailto:${c.e}`;
+  document.getElementById('dPhoneField').style.display = c.p ? 'block' : 'none';
+  document.getElementById('dPhone').textContent = c.p;
+  document.getElementById('dLiField').style.display = c.i ? 'block' : 'none';
+  document.getElementById('dLi').href = c.i;
+  document.getElementById('dSrc').textContent = c.src === 'original_list' ? 'Original curated list' : 'Apollo-enriched';
+
+  const starBtn = document.getElementById('dStar');
+  const isStarred = STATE.shortlist.has(c.e);
+  starBtn.textContent = isStarred ? '★ Starred' : '☆ Star';
+  starBtn.classList.toggle('starred', isStarred);
+  starBtn.onclick = () => {
+    STATE.shortlist.has(c.e) ? STATE.shortlist.delete(c.e) : STATE.shortlist.add(c.e);
+    saveShortlist();
+    openDrawer(c.e); // refresh
+    render();
+  };
+  document.getElementById('dCopy').onclick = () => copyText(c.e);
+  document.getElementById('dMailto').onclick = () => { window.location.href = `mailto:${c.e}`; };
+
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('drawerScrim').classList.add('on');
+  document.getElementById('drawer').setAttribute('aria-hidden', 'false');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drawerScrim').classList.remove('on');
+  document.getElementById('drawer').setAttribute('aria-hidden', 'true');
+}
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('drawerScrim').addEventListener('click', closeDrawer);
+
+// ---------- Utility ----------
+function copyText(t, msg) {
+  navigator.clipboard.writeText(t).then(() => toast(msg || 'Copied to clipboard')).catch(() => toast('Copy failed'));
+}
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('on'), 2000);
+}
+
+// Initial paint
+render();
+})();
 </script>
 </body>
 </html>
